@@ -4,12 +4,15 @@ version = "0.1.0"
 description = "Automatic labeling of CommonRoad scenarios."
 authors = ["Florian Finkeldei <florian.finkeldei@tum.de>"]
 readme = "README.md"
-packages = [{include = "commonroad_labeling"}]
+packages = [{include = "commonroad_labeling"}, { include = "scripts"}]
 
 [tool.poetry.dependencies]
 python = "^3.10"
 commonroad-io = "^2023.3"
 
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.4.3"
 
 [build-system]
 requires = ["poetry-core"]
