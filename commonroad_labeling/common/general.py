@@ -8,6 +8,7 @@ from matplotlib import pyplot as plt
 
 from commonroad_labeling.common.tag import Tag, TagGroup
 from commonroad_labeling.road_configuration.lanelet_layout import LaneletLayoutLabeling
+from commonroad_labeling.road_configuration.obstacle import ObstacleLabeling
 from commonroad_labeling.road_configuration.traffic_sign import TrafficSignLabeling
 
 
@@ -42,6 +43,8 @@ def find_scenario_tags(path_to_file: str) -> set[Tag]:
             detected_tags = TrafficSignLabeling(scenario).get_tags_contained_in_scenario()
         elif TagGroup(tagGroup).value == TagGroup.LANELET_LAYOUT:
             detected_tags = LaneletLayoutLabeling(scenario).get_tags_contained_in_scenario()
+        elif TagGroup(tagGroup).value == TagGroup.OBSTACLE:
+            detected_tags = ObstacleLabeling(scenario).get_tags_contained_in_scenario()
 
         scenario_tags.update(detected_tags)
 

@@ -22,7 +22,7 @@ class TrafficSignLabeling(AutoLabelingBase):
         return False
 
     def contains_speed_limit(self) -> bool:
-        traffic_sign_ids = self.get_traffic_sign_ids_by_tag(Tag.TRAFFIC_SIGN_SPEED_LIMIT)
+        traffic_sign_ids = TrafficSignLabeling.get_traffic_sign_ids_by_tag(Tag.TRAFFIC_SIGN_SPEED_LIMIT)
         for traffic_sign in self.scenario.lanelet_network.traffic_signs:
             for traffic_sign_id in traffic_sign_ids:
                 if traffic_sign_id in list(
@@ -38,17 +38,102 @@ class TrafficSignLabeling(AutoLabelingBase):
     def get_traffic_sign_ids_by_tag(tag: Tag) -> list[enum]:
         # TODO: resolve traffic signs depending on the tag
         if tag == Tag.TRAFFIC_SIGN_SPEED_LIMIT:
-            return [TrafficSignIDZamunda.MAX_SPEED,
-                    TrafficSignIDGermany.MAX_SPEED,
-                    TrafficSignIDUsa.MAX_SPEED,
-                    TrafficSignIDChina.MAX_SPEED,
-                    TrafficSignIDSpain.MAX_SPEED,
-                    TrafficSignIDRussia.MAX_SPEED,
-                    TrafficSignIDArgentina.MAX_SPEED,
-                    TrafficSignIDBelgium.MAX_SPEED,
-                    TrafficSignIDFrance.MAX_SPEED,
-                    TrafficSignIDGreece.MAX_SPEED,
-                    TrafficSignIDCroatia.MAX_SPEED,
-                    TrafficSignIDItaly.MAX_SPEED,
-                    TrafficSignIDPuertoRico.MAX_SPEED]
+            return TrafficSignLabeling.get_speed_limit_traffic_signs()
+        if tag == Tag.TRAFFIC_SIGN_RIGHT_OF_WAY:
+            return TrafficSignLabeling.get_right_of_way_traffic_signs()
+        if tag == Tag.TRAFFIC_SIGN_NO_RIGHT_OF_WAY:
+            return TrafficSignLabeling.get_no_right_of_way_traffic_signs()
         return []
+
+    @staticmethod
+    def get_speed_limit_traffic_signs() -> list[enum]:
+        return [TrafficSignIDZamunda.MAX_SPEED,
+                TrafficSignIDGermany.MAX_SPEED,
+                TrafficSignIDUsa.MAX_SPEED,
+                TrafficSignIDChina.MAX_SPEED,
+                TrafficSignIDSpain.MAX_SPEED,
+                TrafficSignIDRussia.MAX_SPEED,
+                TrafficSignIDArgentina.MAX_SPEED,
+                TrafficSignIDBelgium.MAX_SPEED,
+                TrafficSignIDFrance.MAX_SPEED,
+                TrafficSignIDGreece.MAX_SPEED,
+                TrafficSignIDCroatia.MAX_SPEED,
+                TrafficSignIDItaly.MAX_SPEED,
+                TrafficSignIDPuertoRico.MAX_SPEED,
+
+                TrafficSignIDZamunda.MAX_SPEED_ZONE_START,
+                TrafficSignIDZamunda.MAX_SPEED_ZONE_START,
+
+                TrafficSignIDZamunda.MAX_SPEED_ZONE_END,
+                TrafficSignIDGermany.MAX_SPEED_ZONE_END,
+
+                TrafficSignIDZamunda.MAX_SPEED_END,
+                TrafficSignIDGermany.MAX_SPEED_END,
+
+                TrafficSignIDZamunda.ALL_MAX_SPEED_AND_OVERTAKING_END,
+                TrafficSignIDGermany.ALL_MAX_SPEED_AND_OVERTAKING_END,
+
+                TrafficSignIDZamunda.MIN_SPEED,
+                TrafficSignIDGermany.MIN_SPEED,
+
+                TrafficSignIDZamunda.TOWN_SIGN,
+                TrafficSignIDGermany.TOWN_SIGN,
+
+                TrafficSignIDZamunda.TUNNEL,
+                TrafficSignIDGermany.TUNNEL,
+                # TODO: verify interstates, highways and expressways
+                ]
+
+    @staticmethod
+    def get_right_of_way_traffic_signs() -> list[enum]:
+        return [
+            TrafficSignIDZamunda.RIGHT_OF_WAY,
+            TrafficSignIDGermany.RIGHT_OF_WAY,
+
+            TrafficSignIDZamunda.PRIORITY,
+            TrafficSignIDGermany.PRIORITY,
+
+            TrafficSignIDZamunda.PRIORITY_OVER_ONCOMING,
+            TrafficSignIDGermany.PRIORITY_OVER_ONCOMING,
+        ]
+
+    @staticmethod
+    def get_no_right_of_way_traffic_signs() -> list[enum]:
+        return [
+            TrafficSignIDZamunda.YIELD,
+            TrafficSignIDGermany.YIELD,
+            TrafficSignIDSpain.YIELD,
+
+            TrafficSignIDZamunda.STOP,
+            TrafficSignIDGermany.STOP,
+            TrafficSignIDSpain.STOP,
+
+            TrafficSignIDZamunda.PEDESTRIANS_CROSSING,
+            TrafficSignIDGermany.PEDESTRIANS_CROSSING,
+            TrafficSignIDSpain.PEDESTRIANS_CROSSING,
+
+            TrafficSignIDZamunda.PRIORITY_OPPOSITE_DIRECTION,
+            TrafficSignIDGermany.PRIORITY_OPPOSITE_DIRECTION,
+
+            TrafficSignIDZamunda.ROUNDABOUT,
+            TrafficSignIDGermany.ROUNDABOUT,
+
+            TrafficSignIDZamunda.PEDESTRIAN_AND_BICYCLE_ROAD,
+            TrafficSignIDGermany.PEDESTRIAN_AND_BICYCLE_ROAD,
+
+            TrafficSignIDZamunda.PEDESTRIAN_ZONE_START,
+            TrafficSignIDGermany.PEDESTRIAN_ZONE_START,
+
+            TrafficSignIDZamunda.PEDESTRIAN_ZONE_END,
+            TrafficSignIDGermany.PEDESTRIAN_ZONE_END,
+
+            TrafficSignIDZamunda.BICYCLE_ROAD_START,
+            TrafficSignIDGermany.BICYCLE_ROAD_START,
+
+            TrafficSignIDZamunda.BICYCLE_ROAD_END,
+            TrafficSignIDGermany.BICYCLE_ROAD_END,
+
+            TrafficSignIDZamunda.RAILWAY,
+            TrafficSignIDGermany.RAILWAY,
+        ]
+

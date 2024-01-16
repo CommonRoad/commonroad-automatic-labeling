@@ -1,3 +1,5 @@
+from functools import reduce
+
 from commonroad.scenario.scenario import Scenario
 
 from commonroad_labeling.common.base import AutoLabelingBase
@@ -20,6 +22,12 @@ class LaneletLayoutLabeling(AutoLabelingBase):
             return self.contains_oneway_roads()
         elif Tag(tag) == Tag.LANELET_LAYOUT_INTERSECTION:
             return self.contains_intersection()
+        elif Tag(tag) == Tag.LANELET_LAYOUT_DIVERGING_LANE:
+            return self.contains_diverging_lane()
+        elif Tag(tag) == Tag.LANELET_LAYOUT_MERGING_LANE:
+            return self.contains_merging_lane()
+        elif Tag(tag) == Tag.LANELET_LAYOUT_ROUNDABOUT:
+            return self.contains_roundabout()
         return False
 
     def contains_single_lane(self) -> bool:
@@ -95,3 +103,45 @@ class LaneletLayoutLabeling(AutoLabelingBase):
 
     def contains_intersection(self) -> bool:
         return len(self.scenario.lanelet_network.intersections) > 0
+
+    def contains_diverging_lane(self) -> bool:
+        for lanelet in self.scenario.lanelet_network.lanelets:
+            if lanelet.successor is not None and len(lanelet.successor) == 2 and not self.lanelet_in_intersection(
+                    lanelet.lanelet_id):
+                return True
+        return False
+
+    def contains_merging_lane(self) -> bool:
+        for lanelet in self.scenario.lanelet_network.lanelets:
+            if lanelet.predecessor is not None and len(lanelet.predecessor) == 2 and not self.lanelet_in_intersection(
+                    lanelet.lanelet_id):
+                return True
+        return False
+
+    def lanelet_in_intersection(self, lanelet_id: int):
+        for intersection in self.scenario.lanelet_network.intersections:
+            if lanelet_id in reduce(lambda x, y: {*x, *y}, list(
+                    map(lambda incoming: incoming.incoming_lanelets,
+                        intersection.incomings))):
+                return True
+        return False
+
+    def contains_roundabout(self) -> bool:
+        for lanelet in self.scenario.lanelet_network.lanelets:
+            if lanelet.successor is not None and lanelet.predecessor is not None:
+                for successor_lanelet_id in lanelet.successor:
+                    if self.lanelet_in_roundabout(successor_lanelet_id, lanelet.lanelet_id):
+                        return True
+        return False
+
+    def lanelet_in_roundabout(self, lanelet_id: int, start_lanelet_id: int):
+        for lanelet in self.scenario.lanelet_network.lanelets:
+            if lanelet.lanelet_id == lanelet_id:
+                if lanelet.successor is not None and start_lanelet_id in lanelet.successor:
+                    return True
+                elif lanelet.successor is not None and start_lanelet_id not in lanelet.successor:
+                    for successor_lanelet_id in lanelet.successor:
+                        if self.lanelet_in_roundabout(successor_lanelet_id, start_lanelet_id):
+                            return True
+        return False
+

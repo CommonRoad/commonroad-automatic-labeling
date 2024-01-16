@@ -9,6 +9,7 @@ enum_delimiter = "|"
 class TagGroup(str, Enum):
     LANELET_LAYOUT = "lanelet_layout" + enum_delimiter
     TRAFFIC_SIGN = "traffic_sign" + enum_delimiter
+    OBSTACLE = "obstacle" + enum_delimiter
 
 @enum.unique
 class Tag(str, Enum):
@@ -17,9 +18,22 @@ class Tag(str, Enum):
     LANELET_LAYOUT_BIDIRECTIONAL = TagGroup.LANELET_LAYOUT + "bidirectional"
     LANELET_LAYOUT_ONE_WAY = TagGroup.LANELET_LAYOUT + "one_way"
     LANELET_LAYOUT_INTERSECTION = TagGroup.LANELET_LAYOUT + "intersection"
+    LANELET_LAYOUT_DIVERGING_LANE = TagGroup.LANELET_LAYOUT + "diverging_lane"
+    LANELET_LAYOUT_MERGING_LANE = TagGroup.LANELET_LAYOUT + "merging_lane"
+    LANELET_LAYOUT_ROUNDABOUT = TagGroup.LANELET_LAYOUT + "roundabout"
 
     TRAFFIC_SIGN_SPEED_LIMIT = TagGroup.TRAFFIC_SIGN + "speed_limit"
+    TRAFFIC_SIGN_RIGHT_OF_WAY = TagGroup.TRAFFIC_SIGN + "right_of_way"
+    TRAFFIC_SIGN_NO_RIGHT_OF_WAY = TagGroup.TRAFFIC_SIGN + "no_right_of_way"
     TRAFFIC_SIGN_TRAFFIC_LIGHT = TagGroup.TRAFFIC_SIGN + "traffic_light"
+
+    OBSTACLE_ONCOMING_TRAFFIC = TagGroup.OBSTACLE + "oncoming_traffic"
+    OBSTACLE_NO_ONCOMING_TRAFFIC = TagGroup.OBSTACLE + "no_oncoming_traffic"
+    OBSTACLE_TRAFFIC_AHEAD = TagGroup.OBSTACLE + "traffic_ahead"
+    OBSTACLE_TRAFFIC_BEHIND = TagGroup.OBSTACLE + "traffic_behind"
+    OBSTACLE_TRAFFIC_AROUND = TagGroup.OBSTACLE + "traffic_around"
+    OBSTACLE_OTHER_DYNAMIC = TagGroup.OBSTACLE + "other_dynamic"
+    OBSTACLE_STATIC = TagGroup.OBSTACLE + "static"
 
 
 def scenario_contains_tag(scenario: Scenario, target_tag: Tag) -> bool:
