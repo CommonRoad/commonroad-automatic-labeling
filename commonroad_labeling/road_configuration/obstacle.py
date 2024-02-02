@@ -1,19 +1,19 @@
+from abc import ABC
+
+from commonroad.scenario.lanelet import Lanelet
 from commonroad.scenario.obstacle import ObstacleRole
 from commonroad.scenario.scenario import Scenario
 
-from commonroad_labeling.common.base import AutoLabelingBase
-from commonroad_labeling.common.tag import Tag, TagGroup
+from commonroad_labeling.common.tag import Tag, TagEnum
 
 
-class ObstacleLabeling(AutoLabelingBase):
+class ObstacleStatic(Tag, ABC):
     def __init__(self, scenario: Scenario):
         super().__init__(scenario)
-        self.tag_group = TagGroup.OBSTACLE
+        self.tag = TagEnum.OBSTACLE_STATIC
 
-    def scenario_contains_tag(self, tag: Tag) -> bool:
-        if Tag(tag) == Tag.OBSTACLE_STATIC:
-            return self.contains_static_obstacle()
-        return False
-
-    def contains_static_obstacle(self) -> bool:
+    def is_fulfilled(self) -> bool:
         return any(obstacle.obstacle_role == ObstacleRole.STATIC for obstacle in self.scenario.obstacles)
+
+    def is_fulfilled_for_lanelet(self, lanelet: Lanelet) -> bool:
+        return len(lanelet.static_obstacles_on_lanelet) > 0

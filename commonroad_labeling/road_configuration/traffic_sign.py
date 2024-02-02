@@ -1,28 +1,18 @@
 import enum
+from abc import ABC, abstractmethod
 
+from commonroad.scenario.lanelet import Lanelet
 from commonroad.scenario.scenario import Scenario
-from commonroad.scenario.traffic_sign import TrafficSignIDGermany, TrafficSignIDZamunda, TrafficSignIDUsa, \
+from commonroad.scenario.traffic_sign import TrafficSignIDZamunda, TrafficSignIDGermany, TrafficSignIDUsa, \
     TrafficSignIDChina, TrafficSignIDSpain, TrafficSignIDRussia, TrafficSignIDArgentina, TrafficSignIDBelgium, \
     TrafficSignIDFrance, TrafficSignIDGreece, TrafficSignIDCroatia, TrafficSignIDItaly, TrafficSignIDPuertoRico
 
-from commonroad_labeling.common.base import AutoLabelingBase
-from commonroad_labeling.common.tag import Tag, TagGroup
+from commonroad_labeling.common.tag import Tag, TagEnum
 
 
-class TrafficSignLabeling(AutoLabelingBase):
-    def __init__(self, scenario: Scenario):
-        super().__init__(scenario)
-        self.tag_group = TagGroup.TRAFFIC_SIGN
-
-    def scenario_contains_tag(self, tag: Tag) -> bool:
-        if Tag(tag) == Tag.TRAFFIC_SIGN_SPEED_LIMIT:
-            return self.contains_speed_limit()
-        elif Tag(tag) == Tag.TRAFFIC_SIGN_TRAFFIC_LIGHT:
-            return self.contains_traffic_light()
-        return False
-
-    def contains_speed_limit(self) -> bool:
-        traffic_sign_ids = TrafficSignLabeling.get_traffic_sign_ids_by_tag(Tag.TRAFFIC_SIGN_SPEED_LIMIT)
+class TrafficSign(Tag, ABC):
+    def is_fulfilled(self) -> bool:
+        traffic_sign_ids = self.get_traffic_signs()
         for traffic_sign in self.scenario.lanelet_network.traffic_signs:
             for traffic_sign_id in traffic_sign_ids:
                 if traffic_sign_id in list(
@@ -31,22 +21,24 @@ class TrafficSignLabeling(AutoLabelingBase):
                     return True
         return False
 
-    def contains_traffic_light(self) -> bool:
-        return len(self.scenario.lanelet_network.traffic_lights) > 0
+    def is_fulfilled_for_lanelet(self, lanelet: Lanelet) -> bool:
+        traffic_sign_ids = self.get_traffic_signs()
+        for lanelet_traffic_sign_id in lanelet.traffic_signs:
+            if lanelet_traffic_sign_id in traffic_sign_ids:
+                return True
+        return False
 
-    @staticmethod
-    def get_traffic_sign_ids_by_tag(tag: Tag) -> list[enum]:
-        # TODO: resolve traffic signs depending on the tag
-        if tag == Tag.TRAFFIC_SIGN_SPEED_LIMIT:
-            return TrafficSignLabeling.get_speed_limit_traffic_signs()
-        if tag == Tag.TRAFFIC_SIGN_RIGHT_OF_WAY:
-            return TrafficSignLabeling.get_right_of_way_traffic_signs()
-        if tag == Tag.TRAFFIC_SIGN_NO_RIGHT_OF_WAY:
-            return TrafficSignLabeling.get_no_right_of_way_traffic_signs()
-        return []
+    @abstractmethod
+    def get_traffic_signs(self) -> list[enum]:
+        pass
 
-    @staticmethod
-    def get_speed_limit_traffic_signs() -> list[enum]:
+
+class TrafficSignSpeedLimit(TrafficSign, ABC):
+    def __init__(self, scenario: Scenario):
+        super().__init__(scenario)
+        self.tag = TagEnum.TRAFFIC_SIGN_SPEED_LIMIT
+
+    def get_traffic_signs(self) -> list[enum]:
         return [TrafficSignIDZamunda.MAX_SPEED,
                 TrafficSignIDGermany.MAX_SPEED,
                 TrafficSignIDUsa.MAX_SPEED,
@@ -79,13 +71,16 @@ class TrafficSignLabeling(AutoLabelingBase):
                 TrafficSignIDZamunda.TOWN_SIGN,
                 TrafficSignIDGermany.TOWN_SIGN,
 
-                TrafficSignIDZamunda.TUNNEL,
-                TrafficSignIDGermany.TUNNEL,
                 # TODO: verify interstates, highways and expressways
                 ]
 
-    @staticmethod
-    def get_right_of_way_traffic_signs() -> list[enum]:
+
+class TrafficSignRightOfWay(TrafficSign, ABC):
+    def __init__(self, scenario: Scenario):
+        super().__init__(scenario)
+        self.tag = TagEnum.TRAFFIC_SIGN_RIGHT_OF_WAY
+
+    def get_traffic_signs(self) -> list[enum]:
         return [
             TrafficSignIDZamunda.RIGHT_OF_WAY,
             TrafficSignIDGermany.RIGHT_OF_WAY,
@@ -97,8 +92,13 @@ class TrafficSignLabeling(AutoLabelingBase):
             TrafficSignIDGermany.PRIORITY_OVER_ONCOMING,
         ]
 
-    @staticmethod
-    def get_no_right_of_way_traffic_signs() -> list[enum]:
+
+class TrafficSignNoRightOfWay(TrafficSign, ABC):
+    def __init__(self, scenario: Scenario):
+        super().__init__(scenario)
+        self.tag = TagEnum.TRAFFIC_SIGN_NO_RIGHT_OF_WAY
+
+    def get_traffic_signs(self) -> list[enum]:
         return [
             TrafficSignIDZamunda.YIELD,
             TrafficSignIDGermany.YIELD,
@@ -118,22 +118,27 @@ class TrafficSignLabeling(AutoLabelingBase):
             TrafficSignIDZamunda.ROUNDABOUT,
             TrafficSignIDGermany.ROUNDABOUT,
 
-            TrafficSignIDZamunda.PEDESTRIAN_AND_BICYCLE_ROAD,
-            TrafficSignIDGermany.PEDESTRIAN_AND_BICYCLE_ROAD,
+            # TrafficSignIDZamunda.PEDESTRIAN_AND_BICYCLE_ROAD,
+            # TrafficSignIDGermany.PEDESTRIAN_AND_BICYCLE_ROAD,
 
-            TrafficSignIDZamunda.PEDESTRIAN_ZONE_START,
-            TrafficSignIDGermany.PEDESTRIAN_ZONE_START,
+            # TrafficSignIDZamunda.BICYCLE_ROAD_START,
+            # TrafficSignIDGermany.BICYCLE_ROAD_START,
 
-            TrafficSignIDZamunda.PEDESTRIAN_ZONE_END,
-            TrafficSignIDGermany.PEDESTRIAN_ZONE_END,
-
-            TrafficSignIDZamunda.BICYCLE_ROAD_START,
-            TrafficSignIDGermany.BICYCLE_ROAD_START,
-
-            TrafficSignIDZamunda.BICYCLE_ROAD_END,
-            TrafficSignIDGermany.BICYCLE_ROAD_END,
+            # TrafficSignIDZamunda.BICYCLE_ROAD_END,
+            # TrafficSignIDGermany.BICYCLE_ROAD_END,
 
             TrafficSignIDZamunda.RAILWAY,
             TrafficSignIDGermany.RAILWAY,
         ]
 
+
+class TrafficSignTrafficLight(Tag, ABC):
+    def __init__(self, scenario: Scenario):
+        super().__init__(scenario)
+        self.tag = TagEnum.TRAFFIC_SIGN_TRAFFIC_LIGHT
+
+    def is_fulfilled(self) -> bool:
+        return len(self.scenario.lanelet_network.traffic_lights) > 0
+
+    def is_fulfilled_for_lanelet(self, lanelet: Lanelet) -> bool:
+        return len(lanelet.traffic_lights) > 0
