@@ -132,6 +132,22 @@ class TrafficSignNoRightOfWay(TrafficSign, ABC):
         ]
 
 
+class TrafficSignStopLine(Tag, ABC):
+    def __init__(self, scenario: Scenario):
+        super().__init__(scenario)
+        self.tag = TagEnum.TRAFFIC_SIGN_STOP_LINE
+
+    def is_fulfilled(self) -> bool:
+        for lanelet in self.scenario.lanelet_network.lanelets:
+            is_fulfilled = self.is_fulfilled_for_lanelet(lanelet)
+            if is_fulfilled:
+                return True
+        return False
+
+    def is_fulfilled_for_lanelet(self, lanelet: Lanelet) -> bool:
+        return lanelet.stop_line is not None
+
+
 class TrafficSignTrafficLight(Tag, ABC):
     def __init__(self, scenario: Scenario):
         super().__init__(scenario)

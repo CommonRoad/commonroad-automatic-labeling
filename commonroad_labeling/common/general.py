@@ -10,7 +10,7 @@ from commonroad_labeling.road_configuration.lanelet_layout import LaneletLayoutS
     LaneletLayoutMergingLane, LaneletLayoutRoundabout
 from commonroad_labeling.road_configuration.obstacle import ObstacleStatic
 from commonroad_labeling.road_configuration.traffic_sign import TrafficSignSpeedLimit, TrafficSignRightOfWay, \
-    TrafficSignNoRightOfWay, TrafficSignTrafficLight
+    TrafficSignNoRightOfWay, TrafficSignTrafficLight, TrafficSignStopLine
 
 
 def load_scenario(path: str) -> Scenario:
@@ -59,6 +59,7 @@ def find_scenario_tags(path_to_file: str) -> set[TagEnum]:
     detected_tags.add(TrafficSignSpeedLimit(scenario).get_tag_if_fulfilled())
     detected_tags.add(TrafficSignRightOfWay(scenario).get_tag_if_fulfilled())
     detected_tags.add(TrafficSignNoRightOfWay(scenario).get_tag_if_fulfilled())
+    detected_tags.add(TrafficSignStopLine(scenario).get_tag_if_fulfilled())
     detected_tags.add(TrafficSignTrafficLight(scenario).get_tag_if_fulfilled())
 
     return set(filter(lambda tag: tag is not None, detected_tags))

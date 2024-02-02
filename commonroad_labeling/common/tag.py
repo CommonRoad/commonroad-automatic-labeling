@@ -29,6 +29,7 @@ class TagEnum(str, Enum):
     TRAFFIC_SIGN_SPEED_LIMIT = TagGroupEnum.TRAFFIC_SIGN + "speed_limit"
     TRAFFIC_SIGN_RIGHT_OF_WAY = TagGroupEnum.TRAFFIC_SIGN + "right_of_way"
     TRAFFIC_SIGN_NO_RIGHT_OF_WAY = TagGroupEnum.TRAFFIC_SIGN + "no_right_of_way"
+    TRAFFIC_SIGN_STOP_LINE = TagGroupEnum.TRAFFIC_SIGN + "stop_line"
     TRAFFIC_SIGN_TRAFFIC_LIGHT = TagGroupEnum.TRAFFIC_SIGN + "traffic_light"
 
     OBSTACLE_ONCOMING_TRAFFIC = TagGroupEnum.OBSTACLE + "oncoming_traffic"
