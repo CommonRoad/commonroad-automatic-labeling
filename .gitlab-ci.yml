@@ -1,0 +1,17 @@
+image: python:3.10
+
+stages:
+  - static_check
+
+before_script:
+  - pip install poetry
+  - poetry config virtualenvs.in-project true
+  - poetry install --with tests
+  - source .venv/bin/activate
+
+pre_commit:
+  stage: static_check
+  before_script:
+    - pip install pre-commit
+  script:
+    - pre-commit run --all-files --show-diff-on-failure
