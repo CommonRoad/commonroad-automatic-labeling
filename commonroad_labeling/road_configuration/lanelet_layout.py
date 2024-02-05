@@ -1,4 +1,3 @@
-from abc import ABC
 from functools import reduce
 
 from commonroad.scenario.lanelet import Lanelet
@@ -7,7 +6,7 @@ from commonroad.scenario.scenario import Scenario
 from commonroad_labeling.common.tag import Tag, TagEnum
 
 
-class LaneletLayoutSingleLane(Tag, ABC):
+class LaneletLayoutSingleLane(Tag):
     def __init__(self, scenario: Scenario):
         super().__init__(scenario)
         self.tag = TagEnum.LANELET_LAYOUT_SINGLE_LANE
@@ -26,7 +25,7 @@ class LaneletLayoutSingleLane(Tag, ABC):
         return False
 
 
-class LaneletLayoutMultiLane(Tag, ABC):
+class LaneletLayoutMultiLane(Tag):
     def __init__(self, scenario: Scenario):
         super().__init__(scenario)
         self.tag = TagEnum.LANELET_LAYOUT_MULTI_LANE
@@ -45,7 +44,7 @@ class LaneletLayoutMultiLane(Tag, ABC):
         return False
 
 
-class LaneletLayoutBidirectional(Tag, ABC):
+class LaneletLayoutBidirectional(Tag):
     def __init__(self, scenario: Scenario):
         super().__init__(scenario)
         self.tag = TagEnum.LANELET_LAYOUT_BIDIRECTIONAL
@@ -64,7 +63,7 @@ class LaneletLayoutBidirectional(Tag, ABC):
         return False
 
 
-class LaneletLayoutOneWay(Tag, ABC):
+class LaneletLayoutOneWay(Tag):
     def __init__(self, scenario: Scenario):
         super().__init__(scenario)
         self.tag = TagEnum.LANELET_LAYOUT_ONE_WAY
@@ -126,7 +125,7 @@ class LaneletLayoutOneWay(Tag, ABC):
         return True
 
 
-class LaneletLayoutIntersection(Tag, ABC):
+class LaneletLayoutIntersection(Tag):
     def __init__(self, scenario: Scenario):
         super().__init__(scenario)
         self.tag = TagEnum.LANELET_LAYOUT_INTERSECTION
@@ -143,7 +142,7 @@ class LaneletLayoutIntersection(Tag, ABC):
         return False
 
 
-class LaneletLayoutDivergingLane(Tag, ABC):
+class LaneletLayoutDivergingLane(Tag):
     def __init__(self, scenario: Scenario):
         super().__init__(scenario)
         self.tag = TagEnum.LANELET_LAYOUT_DIVERGING_LANE
@@ -162,7 +161,7 @@ class LaneletLayoutDivergingLane(Tag, ABC):
         return False
 
 
-class LaneletLayoutMergingLane(Tag, ABC):
+class LaneletLayoutMergingLane(Tag):
     def __init__(self, scenario: Scenario):
         super().__init__(scenario)
         self.tag = TagEnum.LANELET_LAYOUT_MERGING_LANE
@@ -181,7 +180,7 @@ class LaneletLayoutMergingLane(Tag, ABC):
         return False
 
 
-class LaneletLayoutRoundabout(Tag, ABC):
+class LaneletLayoutRoundabout(Tag):
     def __init__(self, scenario: Scenario):
         super().__init__(scenario)
         self.tag = TagEnum.LANELET_LAYOUT_ROUNDABOUT

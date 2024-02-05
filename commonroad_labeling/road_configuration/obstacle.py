@@ -1,5 +1,3 @@
-from abc import ABC
-
 from commonroad.scenario.lanelet import Lanelet
 from commonroad.scenario.obstacle import ObstacleRole
 from commonroad.scenario.scenario import Scenario
@@ -7,7 +5,7 @@ from commonroad.scenario.scenario import Scenario
 from commonroad_labeling.common.tag import Tag, TagEnum
 
 
-class ObstacleStatic(Tag, ABC):
+class ObstacleStatic(Tag):
     def __init__(self, scenario: Scenario):
         super().__init__(scenario)
         self.tag = TagEnum.OBSTACLE_STATIC

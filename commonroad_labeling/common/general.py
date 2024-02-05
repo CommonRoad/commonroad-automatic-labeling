@@ -4,7 +4,7 @@ import xml.etree.ElementTree as ET
 from commonroad.common.file_reader import CommonRoadFileReader
 from commonroad.scenario.scenario import Scenario
 
-from commonroad_labeling.common.tag import TagEnum, TagGroupEnum
+from commonroad_labeling.common.tag import TagEnum
 from commonroad_labeling.road_configuration.lanelet_layout import LaneletLayoutSingleLane, LaneletLayoutMultiLane, \
     LaneletLayoutBidirectional, LaneletLayoutOneWay, LaneletLayoutIntersection, LaneletLayoutDivergingLane, \
     LaneletLayoutMergingLane, LaneletLayoutRoundabout

@@ -33,7 +33,7 @@ class TrafficSign(Tag, ABC):
         pass
 
 
-class TrafficSignSpeedLimit(TrafficSign, ABC):
+class TrafficSignSpeedLimit(TrafficSign):
     def __init__(self, scenario: Scenario):
         super().__init__(scenario)
         self.tag = TagEnum.TRAFFIC_SIGN_SPEED_LIMIT
@@ -75,7 +75,7 @@ class TrafficSignSpeedLimit(TrafficSign, ABC):
                 ]
 
 
-class TrafficSignRightOfWay(TrafficSign, ABC):
+class TrafficSignRightOfWay(TrafficSign):
     def __init__(self, scenario: Scenario):
         super().__init__(scenario)
         self.tag = TagEnum.TRAFFIC_SIGN_RIGHT_OF_WAY
@@ -93,7 +93,7 @@ class TrafficSignRightOfWay(TrafficSign, ABC):
         ]
 
 
-class TrafficSignNoRightOfWay(TrafficSign, ABC):
+class TrafficSignNoRightOfWay(TrafficSign):
     def __init__(self, scenario: Scenario):
         super().__init__(scenario)
         self.tag = TagEnum.TRAFFIC_SIGN_NO_RIGHT_OF_WAY
@@ -132,7 +132,7 @@ class TrafficSignNoRightOfWay(TrafficSign, ABC):
         ]
 
 
-class TrafficSignStopLine(Tag, ABC):
+class TrafficSignStopLine(Tag):
     def __init__(self, scenario: Scenario):
         super().__init__(scenario)
         self.tag = TagEnum.TRAFFIC_SIGN_STOP_LINE
@@ -148,7 +148,7 @@ class TrafficSignStopLine(Tag, ABC):
         return lanelet.stop_line is not None
 
 
-class TrafficSignTrafficLight(Tag, ABC):
+class TrafficSignTrafficLight(Tag):
     def __init__(self, scenario: Scenario):
         super().__init__(scenario)
         self.tag = TagEnum.TRAFFIC_SIGN_TRAFFIC_LIGHT
