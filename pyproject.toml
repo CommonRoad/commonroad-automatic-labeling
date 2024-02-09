@@ -9,6 +9,7 @@ packages = [{include = "commonroad_labeling"}, { include = "scripts"}]
 [tool.poetry.dependencies]
 python = "^3.10"
 commonroad-io = "^2023.3"
+commonroad-route-planner = "^2022.3"
 
 
 [tool.poetry.group.dev.dependencies]
@@ -16,6 +17,7 @@ pytest = "^7.4.3"
 black = "^24.1.1"
 isort = "^5.13.2"
 flake8 = "^7.0.0"
+pre-commit = "^3.6.0"
 
 [tool.poetry.group.docs]
 optional = true
