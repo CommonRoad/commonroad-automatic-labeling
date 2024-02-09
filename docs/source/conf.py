@@ -18,9 +18,9 @@ sys.path.append(os.path.join(os.path.dirname(__file__), "../../.."))
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = 'Commonroad automatic scenario labeling'
-copyright = '2024, Florian Finkeldei, Dzan Tabakovic'
-author = 'Florian Finkeldei, Dzan Tabakovic'
+project = "Commonroad automatic scenario labeling"
+copyright = "2024, Florian Finkeldei, Dzan Tabakovic"
+author = "Florian Finkeldei, Dzan Tabakovic"
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
