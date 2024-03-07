@@ -8,6 +8,11 @@ from commonroad_route_planner.route import Route
 from commonroad_route_planner.route_planner import RoutePlanner
 
 from commonroad_labeling.common.tag import TagEnum
+from commonroad_labeling.road_configuration.ego_vehicle_goal.ego_vehicle_goal_intersection import (
+    EgoVehicleGoalIntersectionProceedStraight,
+    EgoVehicleGoalIntersectionTurnLeft,
+    EgoVehicleGoalIntersectionTurnRight,
+)
 from commonroad_labeling.road_configuration.route.route_lanelet_layout import (
     RouteLaneletLayoutBidirectional,
     RouteLaneletLayoutDivergingLane,
@@ -18,7 +23,13 @@ from commonroad_labeling.road_configuration.route.route_lanelet_layout import (
     RouteLaneletLayoutRoundabout,
     RouteLaneletLayoutSingleLane,
 )
-from commonroad_labeling.road_configuration.route.route_obstacle import RouteObstacleOtherDynamic, RouteObstacleStatic
+from commonroad_labeling.road_configuration.route.route_obstacle import (
+    RouteObstacleOtherDynamic,
+    RouteObstacleStatic,
+    RouteOncomingTraffic,
+    RouteTrafficAhead,
+    RouteTrafficBehind,
+)
 from commonroad_labeling.road_configuration.route.route_traffic_sign import (
     RouteTrafficSignNoRightOfWay,
     RouteTrafficSignRightOfWay,
@@ -36,7 +47,11 @@ from commonroad_labeling.road_configuration.scenario.scenario_lanelet_layout imp
     LaneletLayoutRoundabout,
     LaneletLayoutSingleLane,
 )
-from commonroad_labeling.road_configuration.scenario.scenario_obstacle import ObstacleOtherDynamic, ObstacleStatic
+from commonroad_labeling.road_configuration.scenario.scenario_obstacle import (
+    ObstacleOtherDynamic,
+    ObstacleStatic,
+    ObstacleTraffic,
+)
 from commonroad_labeling.road_configuration.scenario.scenario_traffic_sign import (
     TrafficSignNoRightOfWay,
     TrafficSignRightOfWay,
@@ -70,7 +85,6 @@ def get_planned_routes(scenario: Scenario, planning_problem_set: PlanningProblem
     routes = []
     for planning_problem in list(planning_problem_set.planning_problem_dict.values()):
         route_planner = RoutePlanner(scenario, planning_problem, backend=RoutePlanner.Backend.NETWORKX_REVERSED)
-        # TODO: figure out if all routes are needed or most likely one
         calculated_routes = route_planner.plan_routes().retrieve_all_routes()
 
         routes = [*routes, *(calculated_routes[0])]
@@ -95,6 +109,7 @@ def find_scenario_tags(path_to_file: Path) -> set[TagEnum]:
 
     # Obstacles tags
     detected_tags.add(ObstacleStatic(scenario).get_tag_if_fulfilled())
+    detected_tags.add(ObstacleTraffic(scenario).get_tag_if_fulfilled())
     detected_tags.add(ObstacleOtherDynamic(scenario).get_tag_if_fulfilled())
 
     # Traffic sign tags
@@ -121,6 +136,9 @@ def find_scenario_tags(path_to_file: Path) -> set[TagEnum]:
         # Obstacles tags
         detected_tags.add(RouteObstacleStatic(route).get_tag_if_fulfilled())
         detected_tags.add(RouteObstacleOtherDynamic(route).get_tag_if_fulfilled())
+        detected_tags.add(RouteTrafficAhead(route).get_tag_if_fulfilled())
+        detected_tags.add(RouteTrafficBehind(route).get_tag_if_fulfilled())
+        detected_tags.add(RouteOncomingTraffic(route).get_tag_if_fulfilled())
 
         # Traffic sign tags
         detected_tags.add(RouteTrafficSignSpeedLimit(route).get_tag_if_fulfilled())
@@ -128,5 +146,10 @@ def find_scenario_tags(path_to_file: Path) -> set[TagEnum]:
         detected_tags.add(RouteTrafficSignNoRightOfWay(route).get_tag_if_fulfilled())
         detected_tags.add(RouteTrafficSignStopLine(route).get_tag_if_fulfilled())
         detected_tags.add(RouteTrafficSignTrafficLight(route).get_tag_if_fulfilled())
+
+        # Ego vehicle goal tags
+        detected_tags.add(EgoVehicleGoalIntersectionTurnLeft(route).get_tag_if_fulfilled())
+        detected_tags.add(EgoVehicleGoalIntersectionTurnRight(route).get_tag_if_fulfilled())
+        detected_tags.add(EgoVehicleGoalIntersectionProceedStraight(route).get_tag_if_fulfilled())
 
     return set(filter(lambda tag: tag is not None, detected_tags))

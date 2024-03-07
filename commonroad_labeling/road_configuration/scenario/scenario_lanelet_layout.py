@@ -1,5 +1,4 @@
-from functools import reduce
-
+from commonroad.scenario.intersection import Intersection
 from commonroad.scenario.lanelet import Lanelet
 from commonroad.scenario.scenario import Scenario
 
@@ -138,11 +137,28 @@ class LaneletLayoutIntersection(ScenarioTag):
 
     def is_fulfilled_for_lanelet(self, lanelet: Lanelet) -> bool:
         for intersection in self.scenario.lanelet_network.intersections:
-            if lanelet.lanelet_id in reduce(
-                lambda x, y: {*x, *y}, list(map(lambda incoming: incoming.incoming_lanelets, intersection.incomings))
-            ):
+            if lanelet.lanelet_id in self.get_intersection_lanelet_ids(intersection):
                 return True
         return False
+
+    def get_intersection_lanelet_ids(self, intersection: Intersection) -> set[int]:
+        lanelets = set()
+        for intersection_incoming in intersection.incomings:
+            lanelets = lanelets.union(intersection_incoming.incoming_lanelets)
+            if intersection_incoming.successors_left is not None:
+                lanelets = lanelets.union(intersection_incoming.successors_left)
+            if intersection_incoming.successors_right is not None:
+                lanelets = lanelets.union(intersection_incoming.successors_right)
+            if intersection_incoming.successors_straight is not None:
+                lanelets = lanelets.union(intersection_incoming.successors_straight)
+
+        return lanelets
+
+    def get_intersection_by_lanelet_id(self, lanelet_id: int) -> Intersection | None:
+        for intersection in self.scenario.lanelet_network.intersections:
+            if lanelet_id in self.get_intersection_lanelet_ids(intersection):
+                return intersection
+        return None
 
 
 class LaneletLayoutDivergingLane(ScenarioTag):

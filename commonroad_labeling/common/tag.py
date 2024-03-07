@@ -19,6 +19,8 @@ class TagGroupEnum(str, Enum):
     ROUTE_TRAFFIC_SIGN = "ego_vehicle_route_traffic_sign" + enum_delimiter
     ROUTE_OBSTACLE = "ego_vehicle_route_obstacle" + enum_delimiter
 
+    EGO_VEHICLE_GOAL_INTERSECTION = "ego_vehicle_goal_intersection" + enum_delimiter
+
 
 @enum.unique
 class TagEnum(str, Enum):
@@ -37,11 +39,7 @@ class TagEnum(str, Enum):
     SCENARIO_TRAFFIC_SIGN_STOP_LINE = TagGroupEnum.SCENARIO_TRAFFIC_SIGN + "stop_line"
     SCENARIO_TRAFFIC_SIGN_TRAFFIC_LIGHT = TagGroupEnum.SCENARIO_TRAFFIC_SIGN + "traffic_light"
 
-    SCENARIO_OBSTACLE_ONCOMING_TRAFFIC = TagGroupEnum.SCENARIO_OBSTACLE + "oncoming_traffic"
-    SCENARIO_OBSTACLE_NO_ONCOMING_TRAFFIC = TagGroupEnum.SCENARIO_OBSTACLE + "no_oncoming_traffic"
-    SCENARIO_OBSTACLE_TRAFFIC_AHEAD = TagGroupEnum.SCENARIO_OBSTACLE + "traffic_ahead"
-    SCENARIO_OBSTACLE_TRAFFIC_BEHIND = TagGroupEnum.SCENARIO_OBSTACLE + "traffic_behind"
-    SCENARIO_OBSTACLE_TRAFFIC_AROUND = TagGroupEnum.SCENARIO_OBSTACLE + "traffic_around"
+    SCENARIO_OBSTACLE_TRAFFIC = TagGroupEnum.SCENARIO_OBSTACLE + "traffic"
     SCENARIO_OBSTACLE_OTHER_DYNAMIC = TagGroupEnum.SCENARIO_OBSTACLE + "other_dynamic"
     SCENARIO_OBSTACLE_STATIC = TagGroupEnum.SCENARIO_OBSTACLE + "static"
 
@@ -60,8 +58,16 @@ class TagEnum(str, Enum):
     ROUTE_TRAFFIC_SIGN_STOP_LINE = TagGroupEnum.ROUTE_TRAFFIC_SIGN + "stop_line"
     ROUTE_TRAFFIC_SIGN_TRAFFIC_LIGHT = TagGroupEnum.ROUTE_TRAFFIC_SIGN + "traffic_light"
 
+    ROUTE_OBSTACLE_ONCOMING_TRAFFIC = TagGroupEnum.ROUTE_OBSTACLE + "oncoming_traffic"
+    ROUTE_OBSTACLE_NO_ONCOMING_TRAFFIC = TagGroupEnum.ROUTE_OBSTACLE + "no_oncoming_traffic"
+    ROUTE_OBSTACLE_TRAFFIC_AHEAD = TagGroupEnum.ROUTE_OBSTACLE + "traffic_ahead"
+    ROUTE_OBSTACLE_TRAFFIC_BEHIND = TagGroupEnum.ROUTE_OBSTACLE + "traffic_behind"
     ROUTE_OBSTACLE_OTHER_DYNAMIC = TagGroupEnum.ROUTE_OBSTACLE + "other_dynamic"
     ROUTE_OBSTACLE_STATIC = TagGroupEnum.ROUTE_OBSTACLE + "static"
+
+    EGO_VEHICLE_GOAL_INTERSECTION_TURN_LEFT = TagGroupEnum.EGO_VEHICLE_GOAL_INTERSECTION + "turn_left"
+    EGO_VEHICLE_GOAL_INTERSECTION_TURN_RIGHT = TagGroupEnum.EGO_VEHICLE_GOAL_INTERSECTION + "turn_right"
+    EGO_VEHICLE_GOAL_INTERSECTION_PROCEED_STRAIGHT = TagGroupEnum.EGO_VEHICLE_GOAL_INTERSECTION + "proceed_straight"
 
 
 class Tag(ABC):
@@ -92,14 +98,25 @@ class RouteTag(Tag, ABC):
         self.route = route
         self.scenario_tag = scenario_tag
 
+    def get_route_lanelets(self) -> list[Lanelet]:
+        return [
+            self.route.lanelet_network.find_lanelet_by_id(lanelet_id) for lanelet_id in self.route.list_ids_lanelets
+        ]
+
     def is_fulfilled(self) -> bool:
-        lanelets = list(
-            map(
-                lambda lanelet_id: self.route.lanelet_network.find_lanelet_by_id(lanelet_id),
-                self.route.list_ids_lanelets,
-            )
-        )
+        lanelets = self.get_route_lanelets()
         for lanelet in lanelets:
             if self.scenario_tag.is_fulfilled_for_lanelet(lanelet):
                 return True
         return False
+
+
+class EgoVehicleGoal(Tag, ABC):
+    def __init__(self, route: Route):
+        self.route = route
+
+    # TODO: future improvement - get actual vehicle path instead of the high level route
+    def get_route_lanelets(self) -> list[Lanelet]:
+        return [
+            self.route.lanelet_network.find_lanelet_by_id(lanelet_id) for lanelet_id in self.route.list_ids_lanelets
+        ]
