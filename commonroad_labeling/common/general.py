@@ -8,7 +8,7 @@ from commonroad_route_planner.route import Route
 from commonroad_route_planner.route_planner import RoutePlanner
 
 from commonroad_labeling.common.tag import TagEnum
-from commonroad_labeling.road_configuration.ego_vehicle_goal.ego_vehicle_goal_intersection import (
+from commonroad_labeling.ego_vehicle_goal.ego_vehicle_goal_intersection import (
     EgoVehicleGoalIntersectionProceedStraight,
     EgoVehicleGoalIntersectionTurnLeft,
     EgoVehicleGoalIntersectionTurnRight,
