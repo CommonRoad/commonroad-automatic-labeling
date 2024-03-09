@@ -41,8 +41,7 @@ class RouteTrafficBehind(RouteTag):
                 ):
                     return True
 
-        self.tag = TagEnum.ROUTE_OBSTACLE_NO_ONCOMING_TRAFFIC
-        return True
+        return False
 
 
 class RouteOncomingTraffic(RouteTag):

@@ -28,10 +28,10 @@ class TrafficSign(ScenarioTag, ABC):
         for traffic_sign in self.scenario.lanelet_network.traffic_signs:
             for traffic_sign_id in traffic_sign_ids:
                 if traffic_sign_id in list(
-                    map(
-                        lambda traffic_sign_element: traffic_sign_element.traffic_sign_element_id,
-                        traffic_sign.traffic_sign_elements,
-                    )
+                        map(
+                            lambda traffic_sign_element: traffic_sign_element.traffic_sign_element_id,
+                            traffic_sign.traffic_sign_elements,
+                        )
                 ):
                     return True
         return False
@@ -39,8 +39,11 @@ class TrafficSign(ScenarioTag, ABC):
     def is_fulfilled_for_lanelet(self, lanelet: Lanelet) -> bool:
         traffic_sign_ids = self.get_traffic_signs()
         for lanelet_traffic_sign_id in lanelet.traffic_signs:
-            if lanelet_traffic_sign_id in traffic_sign_ids:
-                return True
+            for traffic_sign in self.scenario.lanelet_network.traffic_signs:
+                if lanelet_traffic_sign_id == traffic_sign.traffic_sign_id:
+                    for traffic_sign_element in traffic_sign.traffic_sign_elements:
+                        if traffic_sign_element.traffic_sign_element_id in traffic_sign_ids:
+                            return True
         return False
 
     @abstractmethod
