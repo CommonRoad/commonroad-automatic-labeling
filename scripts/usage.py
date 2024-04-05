@@ -1,5 +1,6 @@
 from pathlib import Path
 
-from commonroad_labeling.common.general import go_through_dir
+from commonroad_labeling.common.general import get_detected_tags_by_file
 
-go_through_dir(Path.cwd().joinpath("..", "scenarios"))
+# specify a directory and detect tags
+tags_by_file = get_detected_tags_by_file(Path.cwd().joinpath("..", "scenarios"))

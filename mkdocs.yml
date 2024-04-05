@@ -1,0 +1,21 @@
+site_name: CommonRoad Automatic Scenario Labeling
+theme:
+  name: material
+  logo: assets/commonroad_white150.png
+plugins:
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            docstring_style: sphinx
+  - search
+
+nav:
+  - Introduction: index.md
+  - Example Usage: example.md
+  - API Reference:
+      - "Common": common.md
+      - "Road Configuraion":
+        - "Scenario": road_configuration_scenario.md
+        - "Route": road_configuration_route.md
+      - "Ego vehicle goal": ego_vehicle_goal.md

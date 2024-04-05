@@ -11,6 +11,10 @@ enum_delimiter = "|"
 
 @enum.unique
 class TagGroupEnum(str, Enum):
+    """
+    This is an enum class that defines groups of all tags for improved readability.
+    """
+
     SCENARIO_LANELET_LAYOUT = "scenario_lanelet_layout" + enum_delimiter
     SCENARIO_TRAFFIC_SIGN = "scenario_traffic_sign" + enum_delimiter
     SCENARIO_OBSTACLE = "scenario_obstacle" + enum_delimiter
@@ -24,6 +28,10 @@ class TagGroupEnum(str, Enum):
 
 @enum.unique
 class TagEnum(str, Enum):
+    """
+    This is an enum class that defines all possible tags that can be detected
+    """
+
     SCENARIO_LANELET_LAYOUT_SINGLE_LANE = TagGroupEnum.SCENARIO_LANELET_LAYOUT + "single_lane"
     SCENARIO_LANELET_LAYOUT_MULTI_LANE = TagGroupEnum.SCENARIO_LANELET_LAYOUT + "multi_lane"
     SCENARIO_LANELET_LAYOUT_BIDIRECTIONAL = TagGroupEnum.SCENARIO_LANELET_LAYOUT + "bidirectional"
@@ -71,39 +79,111 @@ class TagEnum(str, Enum):
 
 
 class Tag(ABC):
+    """
+    This is an abstract class used to implement all detectors. The main mechanism for all the subclasses is
+    to implement their own version of the `is_fulfilled` and the `get_tag` methods, in order to detect the proper
+    tag in case it is detected. Method `get_tag_if_fulfilled` is used to return the adequate tag if the scenario
+    satisfies the conditions in the `is_fulfilled` method.
+    """
+
     def __init__(self):
-        self.tag = None
+        """
+        Initializes the tag attribute with the corresponding tag returned from the `get_tag` method
+        implemented in the subclasses.
+        """
+        self.tag = self.get_tag()
 
     def get_tag_if_fulfilled(self) -> TagEnum | None:
+        """
+        This method is used to return the detected tag for a given scenario.
+        :returns: `TagEnum` if the tag is detected, `None` otherwise.
+        """
         if self.is_fulfilled():
             return self.tag
         return None
 
     @abstractmethod
     def is_fulfilled(self) -> bool:
+        """
+        This method is used to implement the conditions that a certain Scenario needs to satisfy in order to be labeled
+        with the corresponding tag.
+        :returns: Boolean value if the scenario satisfies the given conditions.
+        """
+        pass
+
+    @abstractmethod
+    def get_tag(self) -> TagEnum:
+        """
+        This method is used to set the tag value for each detector class inherited from the `Tag` class.
+        :returns: `TagEnum` to label the particular scenario with.
+        """
         pass
 
 
 class ScenarioTag(Tag, ABC):
+    """
+    This is an abstract class used to implement detectors used for static scenario checking of certain road elements.
+    The abstract methods from the `Tag` class are implemented in the subclasses of this particular class. `ScenarioTag`
+    class is used to introduce an additional abstract method `is_fulfilled_for_lanelet` and to segregate certain tag
+    groups that have similar detection patterns.
+    """
+
     def __init__(self, scenario: Scenario):
+        """
+        Initializes the superclass and an additional `scenario` attribute that is to be processed in the subclasses
+        :param scenario: Scenario used for detection of certain road elements.
+        """
+        super().__init__()
         self.scenario = scenario
 
     @abstractmethod
     def is_fulfilled_for_lanelet(self, lanelet: Lanelet) -> bool:
+        """
+        Abstract method used to detect whether a certain tag is detected in the provided lanelet.
+        :param lanelet: Lanelet that is to be checked whether it satisfies conditions for a given tag.
+        :returns: Boolean value indicating whether the conditions are fulfilled for this particular lanelet.
+        """
         pass
 
 
 class RouteTag(Tag, ABC):
+    """
+    This is an abstract class used to implement detectors for whether an ego vehicle encounters a certain road element
+    in given scenarios. The abstract method `get_tag` from the `Tag` class is implemented in the subclasses of this
+    particular class. `RouteTag` class is used to introduce an additional method `get_route_lanelets`, to implement the
+    `is_fulfilled` method, as it's implementation doesn't vary across subclasses and to segregate certain tag groups
+    that have similar detection patterns.
+    """
+
     def __init__(self, route: Route, scenario_tag: ScenarioTag):
+        """
+        Initializes the superclass, the `route` attribute with the corresponding ego vehicle route in the scenario and
+        the subclass of `ScenarioTag` for `scenario_tag` used to detect whether any lanelets in a route
+        :param route: Specifies a route that an ego vehicle could take for a given scenario and initializes the
+        corresponding attribute.
+        :param scenario_tag: Specifies a subclass of `ScenarioTag` used to detect whether any
+        lanelets in a route provided by the first parameter and initializes the corresponding attribute.
+        """
+        super().__init__()
         self.route = route
         self.scenario_tag = scenario_tag
 
     def get_route_lanelets(self) -> list[Lanelet]:
+        """
+        This method calculates the lanelets from the current `route` attribute value
+        :returns: List of lanelets from the given route in the given scenario.
+        """
         return [
             self.route.lanelet_network.find_lanelet_by_id(lanelet_id) for lanelet_id in self.route.list_ids_lanelets
         ]
 
     def is_fulfilled(self) -> bool:
+        """
+        This method iterates through the lanelets and checks whether any of them satisfy the conditions of a certain tag
+        given by the `scenario_tag` attribute.
+        :returns: Boolean value if the route satisfies the conditions for the given scenario.
+        """
+
         lanelets = self.get_route_lanelets()
         for lanelet in lanelets:
             if self.scenario_tag.is_fulfilled_for_lanelet(lanelet):
@@ -111,12 +191,29 @@ class RouteTag(Tag, ABC):
         return False
 
 
-class EgoVehicleGoal(Tag, ABC):
+class EgoVehicleGoalTag(Tag, ABC):
+    """
+    This is an abstract class used to implement detectors for ego vehicle goals in given scenarios. The abstract methods
+    from the `Tag` class are implemented in the subclasses of this particular class. `EgoVehicleGoalTag` class is used
+    to introduce an additional method `get_route_lanelets` and to segregate certain tag groups that have
+    similar detection patterns.
+    """
+
     def __init__(self, route: Route):
+        """
+        Initializes the class with the given route.
+        :param route: specifies a route that an ego vehicle could take for a given scenario and
+        initializes the corresponding attribute.
+        """
+        super().__init__()
         self.route = route
 
     # TODO: future improvement - get actual vehicle path instead of the high level route
     def get_route_lanelets(self) -> list[Lanelet]:
+        """
+        This method calculates the lanelets from the current `route` attribute value
+        :returns: list of lanelets from the given route in the given scenario
+        """
         return [
             self.route.lanelet_network.find_lanelet_by_id(lanelet_id) for lanelet_id in self.route.list_ids_lanelets
         ]

@@ -8,6 +8,7 @@ from commonroad_route_planner.route import Route
 from commonroad_route_planner.route_planner import RoutePlanner
 
 from commonroad_labeling.common.tag import TagEnum
+from commonroad_labeling.common.util import print_parsing_error, print_scenario_tags
 from commonroad_labeling.ego_vehicle_goal.ego_vehicle_goal_intersection import (
     EgoVehicleGoalIntersectionProceedStraight,
     EgoVehicleGoalIntersectionTurnLeft,
@@ -61,27 +62,52 @@ from commonroad_labeling.road_configuration.scenario.scenario_traffic_sign impor
 )
 
 
-def go_through_dir(path: Path) -> None:
+def get_detected_tags_by_file(path: Path) -> dict[Path, set[TagEnum] | None]:
+    """
+    This function performs the automatic labeling for all CommonRoad files in a folder/single CommonRoad file provided
+    by the specified path and returns a dictionary containing file paths with the results.
+    :param path: Path to a folder containing CommonRoad scenarios or a single file.
+    :return: A dictionary with file paths as keys and, as values, a set of tags if all detectors were executed
+    successfully, `None` if error occurred.
+    """
+    tags_by_file = {}
+
     if path.is_dir():
         for filename in os.listdir(path):
             new_path = path.joinpath(filename)
             if new_path.is_dir():
-                go_through_dir(new_path)
+                tags_by_file.update(get_detected_tags_by_file(new_path))
             elif new_path.is_file() and new_path.suffix == ".xml":
-                parse_file(new_path)
+                tags_by_file[new_path] = parse_file(new_path)
     elif path.is_file():
-        parse_file(path)
+        tags_by_file[path] = parse_file(path)
+
+    return tags_by_file
 
 
-def parse_file(path: Path):
+def parse_file(path: Path) -> set[TagEnum] | None:
+    """
+    This function performs the automatic labeling for a single CommonRoad file provided
+    by the specified path and returns a set of detected tags.
+    :param path: A path to the CommonRoad XML file.
+    :return: A set of detected tags if executed successfully, `None` otherwise.
+    """
     try:
         new_tags = find_scenario_tags(path)
-        print(("{0:-<50}".format(path.name + ":  ") + "------ "), list(map(lambda tag: TagEnum(tag).value, new_tags)))
+        print_scenario_tags(path, new_tags)
+        return new_tags
     except Exception as e:
-        print(("{0:-<50}".format(path.name + ":  ") + "------ "), "Error parsing CommonRoad XML file:", e)
+        print_parsing_error(path, e)
+        return None
 
 
 def get_planned_routes(scenario: Scenario, planning_problem_set: PlanningProblemSet) -> list[Route]:
+    """
+    This function extracts all possible routes that an ego vehicle can take in a given scenario.
+    :param scenario: Scenario for which the routes need to be extracted.
+    :param planning_problem_set: Planning problem set that is related to the given scenario.
+    :return: A list of all possible routes an ego vehicle can take in the given scenario.
+    """
     routes = []
     for planning_problem in list(planning_problem_set.planning_problem_dict.values()):
         route_planner = RoutePlanner(scenario, planning_problem, backend=RoutePlanner.Backend.NETWORKX_REVERSED)
@@ -93,6 +119,12 @@ def get_planned_routes(scenario: Scenario, planning_problem_set: PlanningProblem
 
 
 def find_scenario_tags(path_to_file: Path) -> set[TagEnum]:
+    """
+    This method performs all possible checks for tags for a given CommonRoad file.
+    :param path_to_file: Path to a CommonRoad file for which the automatic tag detection is to be performed.
+    :return: A set of tags that describe the scenario.
+    """
+
     scenario, planning_problem_set = CommonRoadFileReader(path_to_file).open(lanelet_assignment=True)
 
     detected_tags = set()
