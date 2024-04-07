@@ -32,8 +32,8 @@ def compute_metrics_for_id(scenario_with_ego, ego_id):
     ts_end = scenario_with_ego.obstacle_by_id(ego_id).prediction.trajectory.state_list[-1].time_step
     crime_interface = CriMeInterface(config)
     crime_interface.evaluate_scenario([HW, TTC, TTR, ALongReq, LongJ, BTN, P_MC, PF], ts_start, ts_end)
-    crime_interface.visualize(5)
-    utils_vis.plot_criticality_curve(crime_interface)
+    # crime_interface.visualize(5)
+    # utils_vis.plot_criticality_curve(crime_interface)
 
 
 def create_crime_config(scenario_with_ego, ego_id):
