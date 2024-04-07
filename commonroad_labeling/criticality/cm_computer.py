@@ -26,8 +26,6 @@ def compute_metrics(scenario_path: str, ego_id: str = None, save_plots=False, sh
 def compute_metrics_for_id(scenario_with_ego, ego_id):
     config = create_crime_config(scenario_with_ego, ego_id)
 
-    # evaluator = CPI(config)
-
     ts_start = 0
     ts_end = scenario_with_ego.obstacle_by_id(ego_id).prediction.trajectory.state_list[-1].time_step
     crime_interface = CriMeInterface(config)
