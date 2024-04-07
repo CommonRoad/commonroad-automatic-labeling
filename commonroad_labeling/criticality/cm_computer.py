@@ -11,11 +11,12 @@ from commonroad_labeling.criticality.trajectory_inserter import TrajectoryInsert
 
 
 # If no ego_id is given, the vehicle will be generated from the planing problem using reactive planner
-def compute_metrics(scenario_path: str, ego_id: str = None, save_plots=False, show_plots=False, make_gif=False):
+def compute_metrics(scenario_path: str, ego_id: str = None, save_plots=False, show_plots=False, make_gif=False,
+                    do_log=False):
     scenario, planning_problem_set = CommonRoadFileReader(scenario_path).open()
 
     if ego_id is None:
-        inserter = TrajectoryInserter(save_plots=save_plots, show_plots=show_plots, do_make_gif=make_gif)
+        inserter = TrajectoryInserter(save_plots=save_plots, show_plots=show_plots, do_make_gif=make_gif, do_log=do_log)
         scenario, ego_id = inserter.insert_ego_trajectory(planning_problem_set, scenario)
 
     compute_metrics_for_id(scenario, ego_id)

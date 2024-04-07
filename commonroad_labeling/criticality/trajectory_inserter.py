@@ -19,10 +19,11 @@ from commonroad_rp.utility.visualization import make_gif, visualize_planner_at_t
 
 class TrajectoryInserter:
 
-    def __init__(self, save_plots=False, show_plots=False, do_make_gif=False):
+    def __init__(self, save_plots=False, show_plots=False, do_make_gif=False, do_log=False):
         self.save_plots: bool = save_plots
         self.show_plots: bool = show_plots
         self.make_gif: bool = do_make_gif
+        self.do_log: bool = do_log
 
     def insert_ego_trajectory(self, planning_problem_set, scenario):
         scenario_with_ego = deepcopy(scenario)
@@ -61,8 +62,9 @@ class TrajectoryInserter:
         # Mostly copied from reactive_planner tutorial:
 
         # initialize and get logger
-        initialize_logger(config)
-        logger = logging.getLogger("RP_LOGGER")
+        if self.do_log:
+            initialize_logger(config)
+            logger = logging.getLogger("RP_LOGGER")
 
         # *************************************
         # Initialize Planner
