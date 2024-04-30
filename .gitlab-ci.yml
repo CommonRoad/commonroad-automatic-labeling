@@ -8,7 +8,7 @@ stages:
 before_script:
   - pip install poetry
   - poetry config virtualenvs.in-project true
-  - poetry install --with tests
+  - poetry install --with test
   - source .venv/bin/activate
 
 .run_test_with_coverage: &run_test_with_coverage
@@ -28,7 +28,7 @@ test_python_versions:
   image: python:$PYTHON_VERSIONS
   parallel:
     matrix:
-      - PYTHON_VERSIONS: [ "3.9", "3.10", "3.11" ]
+      - PYTHON_VERSIONS: [ "3.10", "3.11" ]
   script:
     - *run_test_with_coverage
 
