@@ -1,5 +1,7 @@
 # Computes criticality metrics for a scenario
 import logging
+import multiprocessing
+from datetime import datetime
 from multiprocessing import Pool
 
 from commonroad.common.file_reader import CommonRoadFileReader
@@ -16,11 +18,14 @@ from commonroad_labeling.criticality.crit_util import compute_center_lanelet, fi
 
 class CMComputer:
 
-    def __init__(self, verbose=False):
+    def __init__(self, metrics, verbose=True, crime_verbose=False):
         self.verbose = verbose
+        self.metrics = metrics
+        self.crime_verbose = crime_verbose
 
     # If no ego_id is given, the vehicle will be generated from the planing problem using reactive planner
-    def compute_metrics(self, scenario_path: str, ego_id: int = None, save_plots=False, show_plots=False, make_gif=False,
+    def compute_metrics(self, scenario_path: str, ego_id: int = None, save_plots=False, show_plots=False,
+                        make_gif=False,
                         do_log=False):
         scenario, planning_problem_set = CommonRoadFileReader(scenario_path).open()
 
@@ -47,39 +52,33 @@ class CMComputer:
                 all_states, scenario_with_ego)
 
         crime_interface = CriMeInterface(config)
-        # Errors in: DA, cant find route in route planner
-        # Intended error?: TTM
-        # SLOOOW: TCI
 
-        # Out:ALatReq, ALongReq, AReq, DST, HW, TTCE, WTTR, MSD, PSD, BTN, CI, CPI,
-        #     STN, LatJ, LongJ, PF, P_MC, ET, PET, TET, THW, TIT, TTB, TTC,
-        #     TTCStar, TTK, TTR, TTS, TTZ, WTTC, SOI, DCE,
-
-        metrics = [ALatReq, ALongReq, AReq, DST, HW, TTCE, WTTR, MSD, PSD, BTN, CI, CPI, STN, LatJ, LongJ, PF, P_MC, ET,
-                   PET, TET, THW, TIT, TTB, TTC, TTCStar, TTK, TTR, TTS, TTZ, WTTC, SOI, DCE, ]
-
-        if verbose:
-            print(f"Started computing metrics for scenario {scenario_path}, ego_id {ego_id}")
+        if self.verbose:
+            print(
+                f"{datetime.now().strftime('%H:%M:%S')}: Started computing metrics for scenario {scenario_path}, ego_id {ego_id}")
         crime_interface.evaluate_scenario(
-            metrics, ts_start,
+            self.metrics, ts_start,
             ts_end,
-            verbose=self.verbose)
+            verbose=self.crime_verbose)
 
         # TODO: make output dir variable
         crime_interface.save_to_file(str(Path.cwd().joinpath("output")))
 
+        if self.verbose:
+            print(
+                f"{datetime.now().strftime('%H:%M:%S')}: Finished computing metrics for scenario {scenario_path}, ego_id {ego_id}")
         # crime_interface.visualize(5)
         # utils_vis.plot_criticality_curve(crime_interface)
 
-    def compute_parallel(self, scenario_dir: str):
+    def compute_parallel(self, scenario_dir: str, process_count=multiprocessing.cpu_count() - 1):
         dir_path = Path(scenario_dir)
         all_scenarios = [str(x.absolute()) for x in list(dir_path.iterdir())]
         scenario_ego_pairs = []
         for scenario in all_scenarios:
             for ego_id in find_egos_from_problem_sets(scenario):
-                scenario_ego_pairs.append([scenario, ego_id])
-        with Pool() as pool:
-            pool.imap_unordered(self.compute_metrics, scenario_ego_pairs)
+                scenario_ego_pairs.append((scenario, ego_id))
+        with Pool(processes=process_count) as pool:
+            results = pool.starmap(self.compute_metrics, scenario_ego_pairs)
             pool.close()
             pool.join()
 
@@ -92,7 +91,10 @@ class CMComputer:
         config.vehicle.ego_id = ego_id
         config.debug.save_plots = False
 
-        if self.verbose:
+        if self.crime_verbose:
             config.print_configuration_summary()
+
+        if not self.crime_verbose:
+            logging.getLogger().setLevel(logging.ERROR)
 
         return config
