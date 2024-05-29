@@ -120,6 +120,6 @@ class CMComputer:
             config.print_configuration_summary()
 
         if not self.crime_verbose:
-            logging.getLogger().setLevel(logging.ERROR)
+            logging.getLogger().setLevel(logging.CRITICAL)
 
         return config
