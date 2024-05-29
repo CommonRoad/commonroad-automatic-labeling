@@ -98,6 +98,8 @@ class CMComputer:
         for scenario in all_scenarios:
             for ego_id in find_egos_from_problem_sets(scenario):
                 scenario_ego_pairs.append((scenario, ego_id))
+        # TODO: replace print with logging
+        print(f"Starting parallel computation of {len(scenario_ego_pairs)} tasks.")
         with Pool(processes=process_count) as pool:
             results = pool.starmap(self.compute_metrics, scenario_ego_pairs)
             pool.close()
