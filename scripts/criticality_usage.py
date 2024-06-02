@@ -8,6 +8,6 @@ metrics = [ALatReq, ALongReq, AReq, DST, HW, TTCE, WTTR, MSD, PSD, BTN, CI, CPI,
            LongJ, PF, P_MC, ET, PET, TET, THW, TIT, TTB, TTC, TTCStar, TTK, TTR, TTS, TTZ,
            WTTC, SOI, DCE, ]
 
-cm_computer = CMComputer(metrics, verbose=True)
-scenario_dir = Path.cwd().joinpath("..", "scenarios", "MONA")
-cm_computer.compute_parallel(str(scenario_dir.absolute()))
+cm_computer = CMComputer(metrics, verbose=True, overwrite=False)
+scenario_dir = Path.cwd().joinpath("..", "scenarios", "MONA", "MONA-East")
+cm_computer.compute_parallel(str(scenario_dir.absolute()), process_count=1)
