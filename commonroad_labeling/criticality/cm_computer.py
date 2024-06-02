@@ -21,10 +21,11 @@ from commonroad_labeling.criticality.crit_util import (
 
 class CMComputer:
 
-    def __init__(self, metrics, verbose=True, crime_verbose=False):
+    def __init__(self, metrics, verbose=True, crime_verbose=False, overwrite=True):
         self.verbose = verbose
         self.metrics = metrics
         self.crime_verbose = crime_verbose
+        self.overwrite = overwrite
 
     # If no ego_id is given, the vehicle will be generated from the planing problem using reactive planner
     def compute_metrics(
@@ -97,6 +98,8 @@ class CMComputer:
         scenario_ego_pairs = []
         for scenario in all_scenarios:
             for ego_id in find_egos_from_problem_sets(scenario):
+                if not self.overwrite and Path.cwd().joinpath("output", f"CriMe-{Path(scenario).name[:-4]}_veh_{ego_id}.xml").exists():
+                    continue
                 scenario_ego_pairs.append((scenario, ego_id))
         # TODO: replace print with logging
         print(f"Starting parallel computation of {len(scenario_ego_pairs)} tasks.")
