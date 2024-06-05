@@ -1,6 +1,7 @@
 # Computes criticality metrics for a scenario
 import logging
 import multiprocessing
+import traceback
 from datetime import datetime
 from multiprocessing import Pool
 
@@ -104,9 +105,25 @@ class CMComputer:
         # TODO: replace print with logging
         print(f"Starting parallel computation of {len(scenario_ego_pairs)} tasks.")
         with Pool(processes=process_count) as pool:
-            results = pool.starmap(self.compute_metrics, scenario_ego_pairs)
+            results = pool.starmap(self.compute_metrics_catching, scenario_ego_pairs)
             pool.close()
             pool.join()
+
+    def compute_metrics_catching(
+        self,
+        scenario_path: str,
+        ego_id: int = None,
+        save_plots=False,
+        show_plots=False,
+        make_gif=False,
+        do_log=False,
+    ):
+        try:
+            self.compute_metrics(scenario_path, ego_id, save_plots, show_plots, make_gif, do_log)
+        except Exception as e:
+            # TODO: Replace with logging
+            print(f"{datetime.now().strftime('%H:%M:%S')}: Exception when computing metrics for scenario "
+                  f"{scenario_path}, for ego_id {ego_id}.\n {traceback.format_exc()}")
 
     def create_crime_config(
         self, scenario_with_ego: Scenario, ego_id: int, scenario_path: str
