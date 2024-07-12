@@ -18,10 +18,7 @@ from commonroad_rp.utility.visualization import make_gif, visualize_planner_at_t
 
 
 class TrajectoryInserter:
-
-    def __init__(
-        self, save_plots=False, show_plots=False, do_make_gif=False, do_log=False
-    ):
+    def __init__(self, save_plots=False, show_plots=False, do_make_gif=False, do_log=False):
         self.save_plots: bool = save_plots
         self.show_plots: bool = show_plots
         self.make_gif: bool = do_make_gif
@@ -31,14 +28,10 @@ class TrajectoryInserter:
         scenario_with_ego = deepcopy(scenario)
 
         # Calculate trajectory of ego vehicle
-        ego_rp_trajectory, ego_vehicle_params = self.get_default_trajectory(
-            scenario_with_ego, planning_problem_set
-        )
+        ego_rp_trajectory, ego_vehicle_params = self.get_default_trajectory(scenario_with_ego, planning_problem_set)
 
         # Create properties of ego vehicle needed to create it as a dynamic obstacle
-        ego_shape = Rectangle(
-            width=ego_vehicle_params.width, length=ego_vehicle_params.length
-        )
+        ego_shape = Rectangle(width=ego_vehicle_params.width, length=ego_vehicle_params.length)
         ego_id = scenario_with_ego.generate_object_id()
         ego_initial_state = self.rp_state_to_init_state(ego_rp_trajectory[0])
         ego_trajectory = Trajectory(1, ego_rp_trajectory[1:])
@@ -70,9 +63,7 @@ class TrajectoryInserter:
         return scenario_with_ego, ego_id
 
     # calculates trajectory of ego vehicle with commonroad reactive planner
-    def get_default_trajectory(
-        self, scenario: Scenario, planing_problem_set: PlanningProblemSet
-    ):
+    def get_default_trajectory(self, scenario: Scenario, planing_problem_set: PlanningProblemSet):
         config = self.create_config(planing_problem_set, scenario)
 
         # Mostly copied from reactive_planner tutorial:
@@ -80,7 +71,7 @@ class TrajectoryInserter:
         # initialize and get logger
         if self.do_log:
             initialize_logger(config)
-            logger = logging.getLogger("RP_LOGGER")
+            logging.getLogger("RP_LOGGER")
 
         # *************************************
         # Initialize Planner
@@ -106,9 +97,7 @@ class TrajectoryInserter:
             current_count = len(planner.record_state_list) - 1
 
             # check if planning cycle or not
-            plan_new_trajectory = (
-                current_count % config.planning.replanning_frequency == 0
-            )
+            plan_new_trajectory = current_count % config.planning.replanning_frequency == 0
             if plan_new_trajectory:
                 # new planning cycle -> plan a new optimal trajectory
                 planner.set_desired_velocity(current_speed=planner.x_0.velocity)
@@ -136,14 +125,10 @@ class TrajectoryInserter:
 
                 # visualization: create ego Vehicle for planned trajectory and store sampled trajectory set
                 if config.debug.show_plots or config.debug.save_plots:
-                    ego_vehicle = planner.convert_state_list_to_commonroad_object(
-                        optimal[0].state_list
-                    )
+                    ego_vehicle = planner.convert_state_list_to_commonroad_object(optimal[0].state_list)
                     sampled_trajectory_bundle = None
                     if config.debug.draw_traj_set:
-                        sampled_trajectory_bundle = deepcopy(
-                            planner.stored_trajectories
-                        )
+                        sampled_trajectory_bundle = deepcopy(planner.stored_trajectories)
             else:
                 # simulate scenario one step forward with planned trajectory
                 sampled_trajectory_bundle = None

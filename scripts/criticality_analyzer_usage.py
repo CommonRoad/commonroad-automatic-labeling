@@ -1,9 +1,15 @@
 from pathlib import Path
 
-from commonroad_labeling.criticality.cm_analyzer import *
-from commonroad_labeling.criticality.cm_analyzer import add_percentile_column, crit_data_to_df
-from commonroad_labeling.criticality.crime_output import parse_crime_output_dir_to_object, \
-    parse_crime_output_dirs_to_object
+from commonroad_labeling.criticality.cm_analyzer import (
+    analyze_criticality,
+    choose_and_scale_metrics,
+    crit_data_to_df,
+    filter_by_quantile,
+)
+from commonroad_labeling.criticality.crime_output import (
+    parse_crime_output_dir_to_object,
+    parse_crime_output_dirs_to_object,
+)
 
 # -----------------------------------------------------------------------------------------------------------
 # Usage 1: You have a set of CriMe output files. Now you want to analyze the criticality of the scenarios and
@@ -47,8 +53,6 @@ crit_dataframe = crit_data_to_df(crit_data_list2)
 
 # Get the list of accepted metrics by running this function while specifying the desired thresholds for the different
 # feature selection steps
-_, accepted_metrics, dropped_metrics = choose_and_scale_metrics(crit_dataframe,
-                                                                robustness_threshold=0.1,
-                                                                correlation_threshold=0.8,
-                                                                variance_threshold=0.01,
-                                                                verbose=True)
+_, accepted_metrics, dropped_metrics = choose_and_scale_metrics(
+    crit_dataframe, robustness_threshold=0.1, correlation_threshold=0.8, variance_threshold=0.01, verbose=True
+)

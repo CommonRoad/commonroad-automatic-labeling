@@ -1,12 +1,12 @@
-import commonroad_crime
+import copy
+
+import numpy as np
 import pandas as pd
-import inspect
+from commonroad_crime.measure import DCE, ET, HW, PET, THW, TTC, TTCE, TTK, TTR, TTZ, WTTC, WTTR, ALongReq, TTCStar
 from sklearn.feature_selection import VarianceThreshold
 from sklearn.preprocessing import MinMaxScaler
 
-from commonroad_crime.measure import *
 from commonroad_labeling.criticality.crime_output import ScenarioCriticalityData
-
 
 # TODO Could be automatically checked like this, but not all CriMe metrics have individual monotonicity specified
 #  (for example TTK, TTZ, WTTR) so manual review is safer until it is double checked that all metrics in CriMe have
@@ -33,7 +33,9 @@ def correlation_chooser(df, correlation_threshold: float, verbose=True):
             if verbose:
                 correlated_columns = correlated.index[correlated].tolist()
                 print(
-                    f"Dropping column '{column}' due to high correlation greater than {correlation_threshold} with columns: {correlated_columns}")
+                    f"Dropping column '{column}' due to high correlation greater than {correlation_threshold} with "
+                    f"columns: {correlated_columns}"
+                )
             to_drop.append(column)
 
     # Create a copy of the dataframe without the columns to be dropped
@@ -53,7 +55,9 @@ def robustness_chooser(original_df, threshold, verbose=True):
             dropped_cols.append(col)
             if verbose:
                 print(
-                    f"Column '{col}' has been dropped since robustness of {robustness} is below threshold of {threshold}")
+                    f"Column '{col}' has been dropped since robustness of {robustness} is below threshold "
+                    f"of {threshold}"
+                )
     return df, dropped_cols
 
 
@@ -68,8 +72,9 @@ def variance_chooser(df, variance_threshold: float, verbose=True):
 
     if verbose:
         print(
-            f"The following metrics have been dropped since they did not meet the variance threshold of {variance_threshold}: " + " ".join(
-                removed_metrics))
+            f"The following metrics have been dropped since they did not meet the variance threshold"
+            f" of {variance_threshold}:" + " ".join(removed_metrics)
+        )
 
     # Create a new dataframe with only the selected features
     df_selected = df.loc[:, selected_features_mask]
@@ -79,24 +84,27 @@ def variance_chooser(df, variance_threshold: float, verbose=True):
 
 def invert_neg_mon_metrics(df):
     inverted_df = df.copy()
-    contained_neg_scale_metric_names = [metric.measure_name for metric in NEGATIVE_MONOTONE_METRICS if
-                                        metric.measure_name in inverted_df.columns]
-    inverted_df.loc[:,
-    [metric for metric in contained_neg_scale_metric_names]] = 1 - inverted_df.loc[:,
-                                                                   [metric for metric in
-                                                                    contained_neg_scale_metric_names]]
+    contained_neg_scale_metric_names = [
+        metric.measure_name for metric in NEGATIVE_MONOTONE_METRICS if metric.measure_name in inverted_df.columns
+    ]
+    inverted_df.loc[:, [metric for metric in contained_neg_scale_metric_names]] = (
+        1 - inverted_df.loc[:, [metric for metric in contained_neg_scale_metric_names]]
+    )
     return inverted_df
 
 
-def choose_and_scale_metrics(df: pd.DataFrame, robustness_threshold: float, correlation_threshold: float,
-                             variance_threshold: float, verbose=True):
+def choose_and_scale_metrics(
+    df: pd.DataFrame, robustness_threshold: float, correlation_threshold: float, variance_threshold: float, verbose=True
+):
     df_no_metadata = df.drop(METADATA_COLUMN_NAMES, axis=1)
 
-    df_dropped, rob_dropped_metrics = robustness_chooser(df_no_metadata, threshold=robustness_threshold,
-                                                         verbose=verbose)
+    df_dropped, rob_dropped_metrics = robustness_chooser(
+        df_no_metadata, threshold=robustness_threshold, verbose=verbose
+    )
     df_dropped = min_max_scale_df(df_dropped)
-    df_dropped, var_dropped_metrics = variance_chooser(df_dropped, variance_threshold=variance_threshold,
-                                                       verbose=verbose)
+    df_dropped, var_dropped_metrics = variance_chooser(
+        df_dropped, variance_threshold=variance_threshold, verbose=verbose
+    )
     df_dropped, cor_dropped_metrics = correlation_chooser(df_dropped, correlation_threshold, verbose=verbose)
 
     df_metadata = df[METADATA_COLUMN_NAMES]
@@ -116,7 +124,7 @@ def scale_metrics(df: pd.DataFrame):
 
 def calculate_row_average(df: pd.DataFrame) -> pd.DataFrame:
     average = df.drop(columns=["timestep"]).mean(axis=1)
-    result_df = pd.DataFrame({'timestep': df['timestep'], 'average': average})
+    result_df = pd.DataFrame({"timestep": df["timestep"], "average": average})
     return result_df
 
 
@@ -127,9 +135,9 @@ def find_max_average(df: pd.DataFrame) -> tuple:
     :param df: The DataFrame to search for the timestep with the maximum average criticality.
     :return: A tuple containing the timestep and average criticality value of the row with the maximum average.
     """
-    max_average_index = df['average'].idxmax()
+    max_average_index = df["average"].idxmax()
     max_average_row = df.loc[max_average_index]
-    max_average_pair = (max_average_row['timestep'], max_average_row['average'])
+    max_average_pair = (max_average_row["timestep"], max_average_row["average"])
     return max_average_pair
 
 
@@ -138,7 +146,7 @@ def get_scenario_average(df: pd.DataFrame, column_name: str) -> float:
 
 
 def add_percentile_column(df, column_name):
-    df[column_name + '_percentile'] = pd.qcut(df[column_name].rank(method='first'), q=100, labels=False) + 1
+    df[column_name + "_percentile"] = pd.qcut(df[column_name].rank(method="first"), q=100, labels=False) + 1
     return df
 
 
@@ -161,22 +169,29 @@ def filter_by_quantile(df, column_name, lower_quantile, upper_quantile):
     return df[(df[column_name] >= lower_bound) & (df[column_name] <= upper_bound)]
 
 
-def analyze_criticality(crit_data_list: list[ScenarioCriticalityData], filter_metrics=True, robustness_threshold=0.1,
-                        correlation_threshold=0.8, variance_threshold=0.01, verbose=True):
+def analyze_criticality(
+    crit_data_list: list[ScenarioCriticalityData],
+    filter_metrics=True,
+    robustness_threshold=0.1,
+    correlation_threshold=0.8,
+    variance_threshold=0.01,
+    verbose=True,
+):
     df = crit_data_to_df(crit_data_list)
 
     if filter_metrics:
-        scaled_df, accepted_metrics, dropped_metrics = choose_and_scale_metrics(df, robustness_threshold,
-                                                                                correlation_threshold,
-                                                                                variance_threshold, verbose=verbose)
+        scaled_df, accepted_metrics, dropped_metrics = choose_and_scale_metrics(
+            df, robustness_threshold, correlation_threshold, variance_threshold, verbose=verbose
+        )
     else:
         scaled_df = scale_metrics(df)
         accepted_metrics = None
 
     scaled_and_inverted_df = invert_neg_mon_metrics(scaled_df)
     grouped_by_scenario = scaled_and_inverted_df.groupby(["scenario_id", "ego_id"])
-    scenario_data_df = {group_name: group_df.drop(["scenario_id", "ego_id"], axis=1) for group_name, group_df in
-                        grouped_by_scenario}
+    scenario_data_df = {
+        group_name: group_df.drop(["scenario_id", "ego_id"], axis=1) for group_name, group_df in grouped_by_scenario
+    }
 
     # Calculate average criticality value of each timestep
     scenario_timestep_averages = {keys: calculate_row_average(df) for keys, df in scenario_data_df.items()}
@@ -185,14 +200,17 @@ def analyze_criticality(crit_data_list: list[ScenarioCriticalityData], filter_me
     most_dangerous_timesteps = {keys: find_max_average(df) for keys, df in scenario_timestep_averages.items()}
     # Calculate average crit over all timesteps of scenario and add column with percentiles
     scenario_averages = {keys: get_scenario_average(df, "average") for keys, df in scenario_timestep_averages.items()}
-    scenario_average_list = [[scenario_id, ego_id, average_crit] for (scenario_id, ego_id), average_crit in
-                             scenario_averages.items()]
+    scenario_average_list = [
+        [scenario_id, ego_id, average_crit] for (scenario_id, ego_id), average_crit in scenario_averages.items()
+    ]
     scenario_average_df = pd.DataFrame(scenario_average_list, columns=["scenario_id", "ego_id", "average_crit"])
     scenario_average_df["percentile"] = scenario_average_df["average_crit"].rank(pct=True)
 
     # Add column with percentiles for the data with each scenarios most dangerous timestep
-    scenario_max_list = [[scenario_id, ego_id, timestep, average_crit] for
-                         (scenario_id, ego_id), (timestep, average_crit) in most_dangerous_timesteps.items()]
+    scenario_max_list = [
+        [scenario_id, ego_id, timestep, average_crit]
+        for (scenario_id, ego_id), (timestep, average_crit) in most_dangerous_timesteps.items()
+    ]
     scenario_max_df = pd.DataFrame(scenario_max_list, columns=["scenario_id", "ego_id", "timestep", "average_crit"])
     scenario_max_df["percentile"] = scenario_max_df["average_crit"].rank(pct=True)
 
