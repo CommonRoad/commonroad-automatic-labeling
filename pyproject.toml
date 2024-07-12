@@ -8,10 +8,10 @@ packages = [{include = "commonroad_labeling"}, { include = "scripts"}]
 
 [tool.poetry.dependencies]
 python = "~3.10"
-commonroad-io = "^2023.3"
-commonroad-route-planner = "^2024.2"
+commonroad-io = ">=2023.3"
+commonroad-route-planner = ">=2024.2"
 commonroad-crime = { git = "git@gitlab.lrz.de:cps/commonroad/commonroad-criticality-measures.git", branch = "develop" }
-commonroad-reactive-planner = "^2023.1"
+commonroad-reactive-planner = ">=2023.1"
 matplotlib = ">=3.5.2, < 3.9"
 pandas = "^2.2.2"
 scikit-learn = "^1.4"
