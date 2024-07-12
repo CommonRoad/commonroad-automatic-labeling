@@ -1,6 +1,5 @@
 from commonroad.common.file_reader import CommonRoadFileReader
 from commonroad.scenario.state import InitialState
-from commonroad.scenario.trajectory import Trajectory
 from commonroad_rp.state import ReactivePlannerState
 
 
