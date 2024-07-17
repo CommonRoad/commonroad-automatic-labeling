@@ -1,4 +1,6 @@
 # Automatic Scenario Labeling
+[![pipeline status](https://gitlab.lrz.de/cps/commonroad/automatic-scenario-labeling/badges/develop/pipeline.svg)](https://gitlab.lrz.de/cps/commonroad/automatic-scenario-labeling/-/commits/develop)
+[![coverage report](https://gitlab.lrz.de/cps/commonroad/automatic-scenario-labeling/badges/develop/coverage.svg)](https://gitlab.lrz.de/cps/commonroad/automatic-scenario-labeling/-/commits/develop)
 
 ## Intended Functionality
 This tool aims to automatically assign the correct labels to CommonRoad scenarios.
