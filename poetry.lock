@@ -1665,6 +1665,7 @@ numpy = [
     {version = ">=1.19.3", markers = "python_version >= \"3.6\" and platform_system == \"Linux\" and platform_machine == \"aarch64\" or python_version >= \"3.9\""},
     {version = ">=1.17.0", markers = "python_version >= \"3.7\""},
     {version = ">=1.17.3", markers = "python_version >= \"3.8\""},
+    {version = ">=1.23.5", markers = "python_version >= \"3.11\""},
 ]
 
 [[package]]
@@ -1727,7 +1728,10 @@ files = [
 ]
 
 [package.dependencies]
-numpy = {version = ">=1.22.4", markers = "python_version < \"3.11\""}
+numpy = [
+    {version = ">=1.22.4", markers = "python_version < \"3.11\""},
+    {version = ">=1.23.2", markers = "python_version == \"3.11\""},
+]
 python-dateutil = ">=2.8.2"
 pytz = ">=2020.1"
 tzdata = ">=2022.7"
@@ -2666,5 +2670,5 @@ test = ["pytest (>=4.6.7)", "pytest-cov (>=2.6.1)"]
 
 [metadata]
 lock-version = "2.0"
-python-versions = "~3.10"
-content-hash = "2d4112b2a02a7d7be63b03a35fd677d5c9ccacd74d95cb835766b8910aac1503"
+python-versions = ">=3.10, <3.12"
+content-hash = "2cb0850a316251a32f58c78150e7a52effa7fe757e849f79144a902fe1ba0ca6"

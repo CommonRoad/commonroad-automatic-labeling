@@ -6,7 +6,7 @@ from commonroad_labeling.ego_vehicle_goal.ego_vehicle_goal_intersection import (
     EgoVehicleGoalIntersectionTurnLeft,
     EgoVehicleGoalIntersectionTurnRight,
 )
-from tests.util_tests import expected_scenario_tags, get_scenario_for_error, get_scenarios_with_routes
+from commonroad_labeling.util_tests import expected_scenario_tags, get_scenario_for_error, get_scenarios_with_routes
 
 
 class EgoVehicleGoalIntersectionTest(unittest.TestCase):

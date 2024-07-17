@@ -8,7 +8,7 @@ from commonroad_labeling.road_configuration.route.route_traffic_sign import (
     RouteTrafficSignStopLine,
     RouteTrafficSignTrafficLight,
 )
-from tests.util_tests import expected_scenario_tags, get_scenario_for_error, get_scenarios_with_routes
+from commonroad_labeling.util_tests import expected_scenario_tags, get_scenario_for_error, get_scenarios_with_routes
 
 
 class RouteTrafficSignTest(unittest.TestCase):
