@@ -12,7 +12,7 @@ before_script:
   - source .venv/bin/activate
 
 .run_test_with_coverage: &run_test_with_coverage
-  - coverage run --source=commonroad_labeling tests/run_tests.py
+  - coverage run -m pytest -v
   - coverage report -m || true
 
 pre_commit:
