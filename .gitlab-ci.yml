@@ -2,12 +2,18 @@ image: python:3.10
 
 stages:
   - static_check
+  - test
+  - deploy
 
 before_script:
   - pip install poetry
   - poetry config virtualenvs.in-project true
-  - poetry install --with tests
+  - poetry install --with test
   - source .venv/bin/activate
+
+.run_test_with_coverage: &run_test_with_coverage
+  - coverage run --source=commonroad_labeling tests/run_tests.py
+  - coverage report -m || true
 
 pre_commit:
   stage: static_check
@@ -15,3 +21,46 @@ pre_commit:
     - pip install pre-commit
   script:
     - pre-commit run --all-files --show-diff-on-failure
+
+## test
+test_python_versions:
+  stage: test
+  image: python:$PYTHON_VERSIONS
+  parallel:
+    matrix:
+      - PYTHON_VERSIONS: [ "3.10", "3.11" ]
+  script:
+    - *run_test_with_coverage
+
+test_latest_python_version_with_coverage:
+  stage: test
+  image: python:3.12
+  script:
+    - *run_test_with_coverage
+    - coverage xml
+  coverage: '/(?i)total.*? (100(?:\.0+)?\%|[1-9]?\d(?:\.\d+)?\%)$/'
+  artifacts:
+    reports:
+      coverage_report:
+        coverage_format: cobertura
+        path: coverage.xml
+
+
+## deploy
+pages:
+  # push the latest documentation of the main branch to the Gitlab pages.
+  # available at https://cps.pages.gitlab.lrz.de/commonroad/automatic-scenario-labeling
+  stage: deploy
+  # when: manual
+  only:
+    - dev
+  publish: site
+  script:
+    - poetry install --with docs
+    - mkdocs build
+  artifacts:
+    paths:
+      - site
+  environment:
+    name: Gitlab Pages
+    url: https://cps.pages.gitlab.lrz.de/commonroad/automatic-scenario-labeling
