@@ -13,6 +13,7 @@ from commonroad_labeling.road_configuration.route.route_lanelet_layout import (
 )
 from commonroad_labeling.util_tests import expected_scenario_tags, get_scenario_for_error, get_scenarios_with_routes
 
+
 class RouteLaneletLayoutTest(unittest.TestCase):
     def setUp(self):
         self.scenarios_and_routes = get_scenarios_with_routes()
