@@ -11,7 +11,7 @@ from commonroad_labeling.road_configuration.route.route_lanelet_layout import (
     RouteLaneletLayoutRoundabout,
     RouteLaneletLayoutSingleLane,
 )
-from tests.util_tests import expected_scenario_tags, get_scenario_for_error, get_scenarios_with_routes
+from commonroad_labeling.util_tests import expected_scenario_tags, get_scenario_for_error, get_scenarios_with_routes
 
 
 class RouteLaneletLayoutTest(unittest.TestCase):
