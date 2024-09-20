@@ -18,13 +18,29 @@ from commonroad_rp.utility.visualization import make_gif, visualize_planner_at_t
 
 
 class TrajectoryInserter:
+    """
+    TrajectoryInserter simulates the trajectory of the ego vehicle using Reactive Planner and inserts it into the scenario.
+    """
     def __init__(self, save_plots=False, show_plots=False, do_make_gif=False, do_log=False):
+        """
+        Initializes the class TrajectoryInserter.
+        :param save_plots: Boolean flag indicating whether to save plots generated during the simulation.
+        :param show_plots: Boolean flag indicating whether to display plots generated during the simulation.
+        :param do_make_gif: Boolean flag indicating whether to create a gif of the simulation.
+        :param do_log: Boolean flag indicating if logs should be created.
+        """
         self.save_plots: bool = save_plots
         self.show_plots: bool = show_plots
         self.make_gif: bool = do_make_gif
         self.do_log: bool = do_log
 
-    def insert_ego_trajectory(self, planning_problem_set, scenario):
+    def insert_ego_trajectory(self, scenario: Scenario, planning_problem_set: PlanningProblemSet):
+        """
+        Simulates the trajectory of the ego vehicle using Reactive Planner and inserts it into the scenario.
+        :param scenario: The scenario object matching the planning problem set.
+        :param planning_problem_set: A planning problem set containing a single planing problem, for which an ego vehicle should be simulated.
+        :return: A tuple containing the updated scenario with the ego vehicle inserted as a dynamic obstacle, and the unique ID assigned to the ego vehicle.
+        """
         scenario_with_ego = deepcopy(scenario)
 
         # Calculate trajectory of ego vehicle
@@ -62,8 +78,13 @@ class TrajectoryInserter:
         scenario_with_ego.add_objects(ego_obstacle)
         return scenario_with_ego, ego_id
 
-    # calculates trajectory of ego vehicle with commonroad reactive planner
     def get_default_trajectory(self, scenario: Scenario, planing_problem_set: PlanningProblemSet):
+        """
+        Simulates the trajectory of the ego vehicle with Reactive Planner.
+        :param scenario: The scenario object matching the planning problem set.
+        :param planing_problem_set: A planning problem set containing a single planing problem, for which an ego vehicle should be simulated.
+        :return: A tuple containing the recorded state list of the planner throughout the simulation and the vehicle parameters.
+        """
         config = self.create_config(planing_problem_set, scenario)
 
         # Mostly copied from reactive_planner tutorial:
@@ -168,6 +189,12 @@ class TrajectoryInserter:
         return planner.record_state_list, planner.vehicle_params
 
     def create_config(self, planing_problem_set, scenario):
+        """
+        Creates a ReactivePlannerConfiguration.
+        :param scenario: The scenario object matching the planning problem set.
+        :param planing_problem_set: A planning problem set containing a single planing problem, for which an ego vehicle should be simulated.
+        :return: A configured ReactivePlannerConfiguration instance.
+        """
         # Get planing_problem from planing_problem_set
         planning_problem = self.get_planing_problem(planing_problem_set)
 
@@ -192,15 +219,25 @@ class TrajectoryInserter:
         return config
 
     def get_planing_problem(self, planing_problem_set):
+        """
+        Returns the planning problem from a planning problem set.
+        :param planing_problem_set: A planning problem set containing a single planing problem, for which an ego vehicle should be simulated.
+        :return: The single planning problem from the set.
+        :raises RuntimeError: If the number of planning problems in the set is not exactly one.
+        """
         planning_problem_dict = planing_problem_set.planning_problem_dict
         if len(planning_problem_dict) == 1:
             planning_problem = list(planning_problem_dict.values()).pop()
         else:
-            RuntimeError("Not exactly one planning_problem in planning_problem_set")
-            return
+            raise RuntimeError("Not exactly one planning_problem in planning_problem_set")
         return planning_problem
 
     def rp_state_to_init_state(self, rp_state: ReactivePlannerState):
+        """
+        Converts a ReactivePlannerState to a InitialState.
+        :param rp_state: Instance of ReactivePlannerState containing the current state information.
+        :return: An instance of InitialState constructed from the given ReactivePlannerState.
+        """
         return InitialState(
             position=rp_state.position,
             orientation=rp_state.orientation,
