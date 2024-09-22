@@ -11,10 +11,10 @@ from commonroad_crime.data_structure.base import CriMeBase
 from commonroad_crime.data_structure.configuration import CriMeConfiguration
 from commonroad_crime.data_structure.crime_interface import CriMeInterface
 
-from commonroad_labeling.criticality.crit_util import compute_center_lanelet, find_egos_from_problem_sets
-from commonroad_labeling.criticality.trajectory_inserter import TrajectoryInserter
+from commonroad_labeling.criticality.computer.crit_util import compute_center_lanelet, find_egos_from_problem_sets
+from commonroad_labeling.criticality.trajectory_inserter.trajectory_inserter import TrajectoryInserter
 
-# TODO Put everything into neat modules, once we know it runs.
+
 class CMComputer:
     """
     This class is used to compute the Criticality Metrics from CommonRoad scenario files.

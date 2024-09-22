@@ -6,7 +6,7 @@ from commonroad_crime.measure import DCE, ET, HW, PET, THW, TTC, TTCE, TTK, TTR,
 from sklearn.feature_selection import VarianceThreshold
 from sklearn.preprocessing import MinMaxScaler
 
-from commonroad_labeling.criticality.crime_output import ScenarioCriticalityData
+from commonroad_labeling.criticality.input_output.crime_output import ScenarioCriticalityData
 
 # TODO Could be automatically checked like this, but not all CriMe metrics have individual monotonicity specified
 #  (for example TTK, TTZ, WTTR) so manual review is safer until it is double checked that all metrics in CriMe have

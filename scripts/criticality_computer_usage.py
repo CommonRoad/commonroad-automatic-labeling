@@ -35,7 +35,7 @@ from commonroad_crime.measure import (
     TTCStar,
 )
 
-from commonroad_labeling.criticality.cm_computer import CMComputer
+from commonroad_labeling.criticality.computer.cm_computer import CMComputer
 
 # Specify the metrics that should be computed
 metrics = [

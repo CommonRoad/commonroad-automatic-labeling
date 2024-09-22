@@ -2,8 +2,8 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from commonroad_labeling.criticality import cm_analyzer
-from commonroad_labeling.criticality.cm_analyzer import min_max_scale_df, correlation_chooser, variance_chooser, \
+from commonroad_labeling.criticality.analyzer import cm_analyzer
+from commonroad_labeling.criticality.analyzer.cm_analyzer import min_max_scale_df, variance_chooser, \
     NEGATIVE_MONOTONE_METRICS
 
 

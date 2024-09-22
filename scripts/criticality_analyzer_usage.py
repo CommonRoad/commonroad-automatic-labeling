@@ -1,13 +1,12 @@
 from pathlib import Path
 
-from commonroad_labeling.criticality.cm_analyzer import (
+from commonroad_labeling.criticality.analyzer.cm_analyzer import (
     analyze_criticality,
     choose_and_scale_metrics,
     crit_data_to_df,
     filter_by_quantile,
 )
-from commonroad_labeling.criticality.crime_output import (
-    parse_crime_output_dir_to_object,
+from commonroad_labeling.criticality.input_output.crime_output import (
     parse_crime_output_dirs_to_object,
 )
 

@@ -9,8 +9,8 @@ from commonroad_crime.data_structure.base import CriMeBase
 from commonroad_crime.measure import ALatReq, ALongReq, AReq, DST, HW, TTCE, WTTR, MSD, PSD, BTN, CI, CPI, STN, LatJ, \
     LongJ, PF, P_MC, ET, PET, TET, THW, TIT, TTB, TTC, TTCStar, TTK, TTR, TTS, TTZ, WTTC, SOI, DCE
 
-from commonroad_labeling.criticality.cm_computer import CMComputer
-from commonroad_labeling.criticality.crit_util import find_egos_from_problem_sets
+from commonroad_labeling.criticality.computer.cm_computer import CMComputer
+from commonroad_labeling.criticality.computer.crit_util import find_egos_from_problem_sets
 
 metrics = [
     ALatReq,
