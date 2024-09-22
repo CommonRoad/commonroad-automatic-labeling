@@ -7,7 +7,8 @@ from commonroad_labeling.criticality.analyzer.cm_analyzer import (
     filter_by_quantile,
 )
 from commonroad_labeling.criticality.input_output.crime_output import (
-    parse_crime_output_dirs_to_object, parse_crime_output_dir_to_object,
+    parse_crime_output_dirs_to_object,
+    parse_crime_output_dir_to_object,
 )
 
 # -----------------------------------------------------------------------------------------------------------
@@ -29,11 +30,15 @@ crit_data_list = parse_crime_output_dirs_to_object([path, path1, path2, path3])
 # which contain little information. The thresholds for the filtering can be adjusted through the parameters.
 # If all metrics in the CriMe output files are considered useful, the filtering can be disabled by the respective
 # parameter.
-scenario_average_df, scenario_max_df, used_metrics = analyze_criticality(crit_data_list, correlation_threshold=0.6)
+scenario_average_df, scenario_max_df, used_metrics = analyze_criticality(
+    crit_data_list, correlation_threshold=0.6
+)
 
 # Now the data can be filtered to get a DataFrame of scenarios with the desired criticality.
 # In this case the most critical 20% of scenarios are returned.
-average_crit_quantile_result = filter_by_quantile(scenario_average_df, "average_crit", 0.8, 1)
+average_crit_quantile_result = filter_by_quantile(
+    scenario_average_df, "average_crit", 0.8, 1
+)
 max_crit_quantile_result = filter_by_quantile(scenario_max_df, "average_crit", 0.8, 1)
 
 # -----------------------------------------------------------------------------------------------------------
@@ -53,5 +58,9 @@ crit_dataframe = crit_data_to_df(crit_data_list2)
 # Get the list of accepted metrics by running this function while specifying the desired thresholds for the different
 # feature selection steps
 _, accepted_metrics, dropped_metrics = choose_and_scale_metrics(
-    crit_dataframe, robustness_threshold=0.1, correlation_threshold=0.8, variance_threshold=0.01, verbose=True
+    crit_dataframe,
+    robustness_threshold=0.1,
+    correlation_threshold=0.8,
+    variance_threshold=0.01,
+    verbose=True,
 )
