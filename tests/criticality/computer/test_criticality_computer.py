@@ -1,10 +1,6 @@
-# Test bei paar szenarien criticality berechnung (alle metrics einzeln?)
-import unittest
 from pathlib import Path
-import random
 
 import pytest
-from Cython.Compiler.Naming import self_cname
 from commonroad_crime.data_structure.base import CriMeBase
 from commonroad_crime.measure import ALatReq, ALongReq, AReq, DST, HW, TTCE, WTTR, MSD, PSD, BTN, CI, CPI, STN, LatJ, \
     LongJ, PF, P_MC, ET, PET, TET, THW, TIT, TTB, TTC, TTCStar, TTK, TTR, TTS, TTZ, WTTC, SOI, DCE
