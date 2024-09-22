@@ -11,8 +11,13 @@ from commonroad_crime.data_structure.base import CriMeBase
 from commonroad_crime.data_structure.configuration import CriMeConfiguration
 from commonroad_crime.data_structure.crime_interface import CriMeInterface
 
-from commonroad_labeling.criticality.computer.crit_util import compute_center_lanelet, find_egos_from_problem_sets
-from commonroad_labeling.criticality.trajectory_inserter.trajectory_inserter import TrajectoryInserter
+from commonroad_labeling.criticality.computer.crit_util import (
+    compute_center_lanelet,
+    find_egos_from_problem_sets,
+)
+from commonroad_labeling.criticality.trajectory_inserter.trajectory_inserter import (
+    TrajectoryInserter,
+)
 
 
 class CMComputer:
@@ -20,7 +25,13 @@ class CMComputer:
     This class is used to compute the Criticality Metrics from CommonRoad scenario files.
     """
 
-    def __init__(self, metrics: list[CriMeBase], verbose=True, crime_verbose=False, overwrite=True):
+    def __init__(
+        self,
+        metrics: list[CriMeBase],
+        verbose=True,
+        crime_verbose=False,
+        overwrite=True,
+    ):
         """
         Initializes the class with the given parameters.
         :param metrics: A list of the CMs that should be computed.
@@ -66,12 +77,20 @@ class CMComputer:
                 do_make_gif=make_gif,
                 do_log=do_log,
             )
-            scenario, ego_id = inserter.insert_ego_trajectory(scenario, planning_problem_set)
+            scenario, ego_id = inserter.insert_ego_trajectory(
+                scenario, planning_problem_set
+            )
 
-        self.compute_metrics_for_id(scenario, ego_id, scenario_path, output_dir=output_dir)
+        self.compute_metrics_for_id(
+            scenario, ego_id, scenario_path, output_dir=output_dir
+        )
 
     def compute_metrics_for_id(
-        self, scenario_with_ego, ego_id, scenario_path, output_dir=str(Path.cwd().joinpath("output"))
+        self,
+        scenario_with_ego,
+        ego_id,
+        scenario_path,
+        output_dir=str(Path.cwd().joinpath("output")),
     ):
         """
         Computes the CMs for the vehicle with the given identifier.
@@ -90,7 +109,9 @@ class CMComputer:
         all_states.insert(0, ego_obstacle.initial_state)
 
         if ego_obstacle.prediction.center_lanelet_assignment is None:
-            ego_obstacle.prediction.center_lanelet_assignment = compute_center_lanelet(all_states, scenario_with_ego)
+            ego_obstacle.prediction.center_lanelet_assignment = compute_center_lanelet(
+                all_states, scenario_with_ego
+            )
 
         crime_interface = CriMeInterface(config)
 
@@ -99,9 +120,13 @@ class CMComputer:
                 f"{datetime.now().strftime('%H:%M:%S')}: Started computing metrics for scenario {scenario_path},"
                 f" ego_id {ego_id}"
             )
-        crime_interface.evaluate_scenario(self.metrics, ts_start, ts_end, verbose=self.crime_verbose)
+        crime_interface.evaluate_scenario(
+            self.metrics, ts_start, ts_end, verbose=self.crime_verbose
+        )
 
-        output_dir = output_dir if output_dir is not None else str(Path.cwd().joinpath("output"))
+        output_dir = (
+            output_dir if output_dir is not None else str(Path.cwd().joinpath("output"))
+        )
         crime_interface.save_to_file(output_dir)
 
         if self.verbose:
@@ -143,10 +168,22 @@ class CMComputer:
             for ego_id in find_egos_from_problem_sets(scenario):
                 if (
                     not self.overwrite
-                    and Path(output_dir).joinpath(f"CriMe-{Path(scenario).name[:-4]}_veh_{ego_id}.xml").exists()
+                    and Path(output_dir)
+                    .joinpath(f"CriMe-{Path(scenario).name[:-4]}_veh_{ego_id}.xml")
+                    .exists()
                 ):
                     continue
-                scenario_ego_pairs.append((scenario, ego_id, save_plots, show_plots, make_gif, do_log, output_dir))
+                scenario_ego_pairs.append(
+                    (
+                        scenario,
+                        ego_id,
+                        save_plots,
+                        show_plots,
+                        make_gif,
+                        do_log,
+                        output_dir,
+                    )
+                )
         print(f"Starting parallel computation of {len(scenario_ego_pairs)} tasks.")
         with Pool(processes=process_count) as pool:
             pool.starmap(self.compute_metrics_catching, scenario_ego_pairs)
@@ -162,7 +199,6 @@ class CMComputer:
         do_log=False,
         output_dir: str = None,
     ):
-
         """
         Computes the CMs for scenarios in the given directory in sequence. Useful for debugging.
         :param scenario_dir: Directory containing the scenario files to be processed.
@@ -179,13 +215,23 @@ class CMComputer:
             for ego_id in find_egos_from_problem_sets(scenario):
                 if (
                     not self.overwrite
-                    and Path(output_dir).joinpath(f"CriMe-{Path(scenario).name[:-4]}_veh_{ego_id}.xml").exists()
+                    and Path(output_dir)
+                    .joinpath(f"CriMe-{Path(scenario).name[:-4]}_veh_{ego_id}.xml")
+                    .exists()
                 ):
                     continue
                 scenario_ego_pairs.append((scenario, ego_id))
         print(f"Starting computation of {len(scenario_ego_pairs)} tasks.")
         for scenario, ego_id in scenario_ego_pairs:
-            self.compute_metrics_catching(scenario, ego_id=ego_id, output_dir=output_dir, save_plots=save_plots, show_plots=show_plots, make_gif=make_gif, do_log=do_log),
+            self.compute_metrics_catching(
+                scenario,
+                ego_id=ego_id,
+                output_dir=output_dir,
+                save_plots=save_plots,
+                show_plots=show_plots,
+                make_gif=make_gif,
+                do_log=do_log,
+            ),
 
     def compute_metrics_catching(
         self,
@@ -208,14 +254,24 @@ class CMComputer:
         :param output_dir: Directory to which the CM output data should be written to.
         """
         try:
-            self.compute_metrics(scenario_path, ego_id, save_plots, show_plots, make_gif, do_log, output_dir)
+            self.compute_metrics(
+                scenario_path,
+                ego_id,
+                save_plots,
+                show_plots,
+                make_gif,
+                do_log,
+                output_dir,
+            )
         except Exception:
             print(
                 f"{datetime.now().strftime('%H:%M:%S')}: Exception when computing metrics for scenario "
                 f"{scenario_path}, for ego_id {ego_id}.\n {traceback.format_exc()}"
             )
 
-    def create_crime_config(self, scenario_with_ego: Scenario, ego_id: int, scenario_path: str) -> CriMeConfiguration:
+    def create_crime_config(
+        self, scenario_with_ego: Scenario, ego_id: int, scenario_path: str
+    ) -> CriMeConfiguration:
         """
         Creates a CriMeConfiguration object necessary for CriMe to function.
         :param scenario_with_ego: The scenario object containing the trajectory of the ego vehicle.

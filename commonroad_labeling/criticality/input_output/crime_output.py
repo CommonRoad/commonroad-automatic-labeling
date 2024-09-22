@@ -2,30 +2,32 @@ from pathlib import Path
 
 import lxml.etree
 
+
 # TODO: Could be integrated into CriMe repository directly
 class ScenarioCriticalityData:
     """
-        Class to represent the criticality data of a scenario.
+    Class to represent the criticality data of a scenario.
 
-        :param time_step_size: The size of each time step in the scenario.
+    :param time_step_size: The size of each time step in the scenario.
 
-        :param common_road_version: The version of CommonRoad.
+    :param common_road_version: The version of CommonRoad.
 
-        :param author: The author of the scenario.
+    :param author: The author of the scenario.
 
-        :param affiliation: The affiliation of the author.
+    :param affiliation: The affiliation of the author.
 
-        :param source: The source of the scenario data.
+    :param source: The source of the scenario data.
 
-        :param benchmark_id: The unique identifier for the benchmark.
+    :param benchmark_id: The unique identifier for the benchmark.
 
-        :param ego_id: The identifier for the ego vehicle in the scenario.
+    :param ego_id: The identifier for the ego vehicle in the scenario.
 
-        :param measure_list: A list of Criticality Measures used in the scenario.
+    :param measure_list: A list of Criticality Measures used in the scenario.
 
-        :param data: A dictionary that maps time steps to another dictionary
-                     mapping Criticality Measure names to their respective float values.
+    :param data: A dictionary that maps time steps to another dictionary
+                 mapping Criticality Measure names to their respective float values.
     """
+
     def __init__(
         self,
         time_step_size: float,
@@ -84,7 +86,9 @@ def parse_crime_output_to_object(xml_file_path: str) -> ScenarioCriticalityData:
     # Extract data properties
     timestep_data = {
         int(timestep.get("timestep")): {
-            measure.get("name"): (None if measure.get("value") == "None" else float(measure.get("value")))
+            measure.get("name"): (
+                None if measure.get("value") == "None" else float(measure.get("value"))
+            )
             for measure in timestep
         }
         for timestep in root.find("data")
@@ -104,18 +108,26 @@ def parse_crime_output_to_object(xml_file_path: str) -> ScenarioCriticalityData:
     )
 
 
-def parse_crime_output_dir_to_object(directory_path: str) -> list[ScenarioCriticalityData]:
+def parse_crime_output_dir_to_object(
+    directory_path: str,
+) -> list[ScenarioCriticalityData]:
     """
     Parses all CriMe output files in a directory into a list of ScenarioCriticalityData objects.
     :param directory_path: Path to the directory containing CriMe output .xml files.
     :return: List of ScenarioCriticalityData objects parsed from the .xml files.
     """
     dir_path = Path(directory_path)
-    all_scenarios = [str(x.absolute()) for x in list(dir_path.iterdir()) if x.is_file() and x.name.endswith(".xml")]
+    all_scenarios = [
+        str(x.absolute())
+        for x in list(dir_path.iterdir())
+        if x.is_file() and x.name.endswith(".xml")
+    ]
     return [parse_crime_output_to_object(scenario) for scenario in all_scenarios]
 
 
-def parse_crime_output_dirs_to_object(directory_paths: list[str]) -> list[ScenarioCriticalityData]:
+def parse_crime_output_dirs_to_object(
+    directory_paths: list[str],
+) -> list[ScenarioCriticalityData]:
     """
     Parses all CriMe output files in a list of directories into a list of ScenarioCriticalityData objects.
     :param directory_paths: A list of directory paths containing CriMe output files.
