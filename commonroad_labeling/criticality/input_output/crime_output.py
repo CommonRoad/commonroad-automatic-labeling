@@ -86,9 +86,7 @@ def parse_crime_output_to_object(xml_file_path: str) -> ScenarioCriticalityData:
     # Extract data properties
     timestep_data = {
         int(timestep.get("timestep")): {
-            measure.get("name"): (
-                None if measure.get("value") == "None" else float(measure.get("value"))
-            )
+            measure.get("name"): (None if measure.get("value") == "None" else float(measure.get("value")))
             for measure in timestep
         }
         for timestep in root.find("data")
@@ -117,11 +115,7 @@ def parse_crime_output_dir_to_object(
     :return: List of ScenarioCriticalityData objects parsed from the .xml files.
     """
     dir_path = Path(directory_path)
-    all_scenarios = [
-        str(x.absolute())
-        for x in list(dir_path.iterdir())
-        if x.is_file() and x.name.endswith(".xml")
-    ]
+    all_scenarios = [str(x.absolute()) for x in list(dir_path.iterdir()) if x.is_file() and x.name.endswith(".xml")]
     return [parse_crime_output_to_object(scenario) for scenario in all_scenarios]
 
 

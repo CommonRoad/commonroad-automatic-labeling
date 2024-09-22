@@ -22,9 +22,7 @@ class TrajectoryInserter:
     TrajectoryInserter simulates the trajectory of the ego vehicle using Reactive Planner and inserts it into the scenario.
     """
 
-    def __init__(
-        self, save_plots=False, show_plots=False, do_make_gif=False, do_log=False
-    ):
+    def __init__(self, save_plots=False, show_plots=False, do_make_gif=False, do_log=False):
         """
         Initializes the class TrajectoryInserter.
         :param save_plots: Boolean flag indicating whether to save plots generated during the simulation.
@@ -37,9 +35,7 @@ class TrajectoryInserter:
         self.make_gif: bool = do_make_gif
         self.do_log: bool = do_log
 
-    def insert_ego_trajectory(
-        self, scenario: Scenario, planning_problem_set: PlanningProblemSet
-    ):
+    def insert_ego_trajectory(self, scenario: Scenario, planning_problem_set: PlanningProblemSet):
         """
         Simulates the trajectory of the ego vehicle using Reactive Planner and inserts it into the scenario.
         :param scenario: The scenario object matching the planning problem set.
@@ -49,14 +45,10 @@ class TrajectoryInserter:
         scenario_with_ego = deepcopy(scenario)
 
         # Calculate trajectory of ego vehicle
-        ego_rp_trajectory, ego_vehicle_params = self.get_default_trajectory(
-            scenario_with_ego, planning_problem_set
-        )
+        ego_rp_trajectory, ego_vehicle_params = self.get_default_trajectory(scenario_with_ego, planning_problem_set)
 
         # Create properties of ego vehicle needed to create it as a dynamic obstacle
-        ego_shape = Rectangle(
-            width=ego_vehicle_params.width, length=ego_vehicle_params.length
-        )
+        ego_shape = Rectangle(width=ego_vehicle_params.width, length=ego_vehicle_params.length)
         ego_id = scenario_with_ego.generate_object_id()
         ego_initial_state = self.rp_state_to_init_state(ego_rp_trajectory[0])
         ego_trajectory = Trajectory(1, ego_rp_trajectory[1:])
@@ -87,9 +79,7 @@ class TrajectoryInserter:
         scenario_with_ego.add_objects(ego_obstacle)
         return scenario_with_ego, ego_id
 
-    def get_default_trajectory(
-        self, scenario: Scenario, planing_problem_set: PlanningProblemSet
-    ):
+    def get_default_trajectory(self, scenario: Scenario, planing_problem_set: PlanningProblemSet):
         """
         Simulates the trajectory of the ego vehicle with Reactive Planner.
         :param scenario: The scenario object matching the planning problem set.
@@ -129,9 +119,7 @@ class TrajectoryInserter:
             current_count = len(planner.record_state_list) - 1
 
             # check if planning cycle or not
-            plan_new_trajectory = (
-                current_count % config.planning.replanning_frequency == 0
-            )
+            plan_new_trajectory = current_count % config.planning.replanning_frequency == 0
             if plan_new_trajectory:
                 # new planning cycle -> plan a new optimal trajectory
                 planner.set_desired_velocity(current_speed=planner.x_0.velocity)
@@ -159,14 +147,10 @@ class TrajectoryInserter:
 
                 # visualization: create ego Vehicle for planned trajectory and store sampled trajectory set
                 if config.debug.show_plots or config.debug.save_plots:
-                    ego_vehicle = planner.convert_state_list_to_commonroad_object(
-                        optimal[0].state_list
-                    )
+                    ego_vehicle = planner.convert_state_list_to_commonroad_object(optimal[0].state_list)
                     sampled_trajectory_bundle = None
                     if config.debug.draw_traj_set:
-                        sampled_trajectory_bundle = deepcopy(
-                            planner.stored_trajectories
-                        )
+                        sampled_trajectory_bundle = deepcopy(planner.stored_trajectories)
             else:
                 # simulate scenario one step forward with planned trajectory
                 sampled_trajectory_bundle = None
@@ -246,9 +230,7 @@ class TrajectoryInserter:
         if len(planning_problem_dict) == 1:
             planning_problem = list(planning_problem_dict.values()).pop()
         else:
-            raise RuntimeError(
-                "Not exactly one planning_problem in planning_problem_set"
-            )
+            raise RuntimeError("Not exactly one planning_problem in planning_problem_set")
         return planning_problem
 
     def rp_state_to_init_state(self, rp_state: ReactivePlannerState):

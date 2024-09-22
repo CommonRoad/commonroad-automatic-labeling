@@ -2,28 +2,11 @@ import copy
 
 import numpy as np
 import pandas as pd
-from commonroad_crime.measure import (
-    DCE,
-    ET,
-    HW,
-    PET,
-    THW,
-    TTC,
-    TTCE,
-    TTK,
-    TTR,
-    TTZ,
-    WTTC,
-    WTTR,
-    ALongReq,
-    TTCStar,
-)
+from commonroad_crime.measure import DCE, ET, HW, PET, THW, TTC, TTCE, TTK, TTR, TTZ, WTTC, WTTR, ALongReq, TTCStar
 from sklearn.feature_selection import VarianceThreshold
 from sklearn.preprocessing import MinMaxScaler
 
-from commonroad_labeling.criticality.input_output.crime_output import (
-    ScenarioCriticalityData,
-)
+from commonroad_labeling.criticality.input_output.crime_output import ScenarioCriticalityData
 
 # TODO Could be automatically checked like this, but not all CriMe metrics have individual monotonicity specified
 #  (for example TTK, TTZ, WTTR) so manual review is safer until it is double checked that all metrics in CriMe have
@@ -64,9 +47,7 @@ def correlation_chooser(df, correlation_threshold: float, verbose=True):
 
     correlation_matrix = df.corr().abs()
     # Select upper triangle of correlation matrix
-    upper = correlation_matrix.where(
-        np.triu(np.ones(correlation_matrix.shape), k=1).astype(bool)
-    )
+    upper = correlation_matrix.where(np.triu(np.ones(correlation_matrix.shape), k=1).astype(bool))
 
     # Find features with correlation greater than correlation_threshold
     to_drop = []
@@ -150,9 +131,7 @@ def monotonicity_adjustment(df):
     """
     inverted_df = df.copy()
     contained_neg_scale_metric_names = [
-        metric.measure_name
-        for metric in NEGATIVE_MONOTONE_METRICS
-        if metric.measure_name in inverted_df.columns
+        metric.measure_name for metric in NEGATIVE_MONOTONE_METRICS if metric.measure_name in inverted_df.columns
     ]
     inverted_df.loc[:, [metric for metric in contained_neg_scale_metric_names]] = (
         1 - inverted_df.loc[:, [metric for metric in contained_neg_scale_metric_names]]
@@ -185,9 +164,7 @@ def choose_and_scale_metrics(
     df_dropped, var_dropped_metrics = variance_chooser(
         df_dropped, variance_threshold=variance_threshold, verbose=verbose
     )
-    df_dropped, cor_dropped_metrics = correlation_chooser(
-        df_dropped, correlation_threshold, verbose=verbose
-    )
+    df_dropped, cor_dropped_metrics = correlation_chooser(df_dropped, correlation_threshold, verbose=verbose)
 
     df_metadata = df[METADATA_COLUMN_NAMES]
 
@@ -254,9 +231,7 @@ def add_percentile_column(df, column_name):
     :param column_name: Name of the column in the DataFrame for which percentiles are to be calculated.
     :return: DataFrame with an additional column containing percentiles based on the specified column.
     """
-    df[column_name + "_percentile"] = (
-        pd.qcut(df[column_name].rank(method="first"), q=100, labels=False) + 1
-    )
+    df[column_name + "_percentile"] = pd.qcut(df[column_name].rank(method="first"), q=100, labels=False) + 1
     return df
 
 
@@ -314,34 +289,21 @@ def analyze_criticality(
     scaled_and_inverted_df = monotonicity_adjustment(scaled_df)
     grouped_by_scenario = scaled_and_inverted_df.groupby(["scenario_id", "ego_id"])
     scenario_data_df = {
-        group_name: group_df.drop(["scenario_id", "ego_id"], axis=1)
-        for group_name, group_df in grouped_by_scenario
+        group_name: group_df.drop(["scenario_id", "ego_id"], axis=1) for group_name, group_df in grouped_by_scenario
     }
 
     # Calculate average criticality value of each timestep
-    scenario_timestep_averages = {
-        keys: calculate_row_average(df) for keys, df in scenario_data_df.items()
-    }
+    scenario_timestep_averages = {keys: calculate_row_average(df) for keys, df in scenario_data_df.items()}
 
     # Find the timestep with the highest average criticality and safe its time and value
-    most_dangerous_timesteps = {
-        keys: find_max_average(df) for keys, df in scenario_timestep_averages.items()
-    }
+    most_dangerous_timesteps = {keys: find_max_average(df) for keys, df in scenario_timestep_averages.items()}
     # Calculate average crit over all timesteps of scenario and add column with percentiles
-    scenario_averages = {
-        keys: get_column_average(df, "average")
-        for keys, df in scenario_timestep_averages.items()
-    }
+    scenario_averages = {keys: get_column_average(df, "average") for keys, df in scenario_timestep_averages.items()}
     scenario_average_list = [
-        [scenario_id, ego_id, average_crit]
-        for (scenario_id, ego_id), average_crit in scenario_averages.items()
+        [scenario_id, ego_id, average_crit] for (scenario_id, ego_id), average_crit in scenario_averages.items()
     ]
-    scenario_average_df = pd.DataFrame(
-        scenario_average_list, columns=["scenario_id", "ego_id", "average_crit"]
-    )
-    scenario_average_df["percentile"] = scenario_average_df["average_crit"].rank(
-        pct=True
-    )
+    scenario_average_df = pd.DataFrame(scenario_average_list, columns=["scenario_id", "ego_id", "average_crit"])
+    scenario_average_df["percentile"] = scenario_average_df["average_crit"].rank(pct=True)
 
     # Add column with percentiles for the data with each scenarios most dangerous timestep
     scenario_max_list = [
@@ -351,9 +313,7 @@ def analyze_criticality(
             average_crit,
         ) in most_dangerous_timesteps.items()
     ]
-    scenario_max_df = pd.DataFrame(
-        scenario_max_list, columns=["scenario_id", "ego_id", "timestep", "average_crit"]
-    )
+    scenario_max_df = pd.DataFrame(scenario_max_list, columns=["scenario_id", "ego_id", "timestep", "average_crit"])
     scenario_max_df["percentile"] = scenario_max_df["average_crit"].rank(pct=True)
 
     return scenario_average_df, scenario_max_df, accepted_metrics
@@ -397,7 +357,5 @@ def min_max_scale_df(df) -> pd.DataFrame:
         if (normalized_df[column] == -np.inf).any():
             min_value = normalized_df[normalized_df[column] != -np.inf][column].min()
             normalized_df[column] = normalized_df[column].replace(-np.inf, min_value)
-    normalized_df[normalized_df.columns] = scaler.fit_transform(
-        normalized_df[normalized_df.columns]
-    )
+    normalized_df[normalized_df.columns] = scaler.fit_transform(normalized_df[normalized_df.columns])
     return normalized_df
