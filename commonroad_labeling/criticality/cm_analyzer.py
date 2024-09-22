@@ -27,8 +27,10 @@ def correlation_chooser(df, correlation_threshold: float, verbose=True):
     :param verbose: When set to True, prints detailed information about which columns are being dropped and why.
     :return: A tuple containing the DataFrame after dropping the highly correlated columns and a list of the columns that were dropped.
     """
-    correlation_matrix = df.corr().abs()
+    if df.empty:
+        raise ValueError
 
+    correlation_matrix = df.corr().abs()
     # Select upper triangle of correlation matrix
     upper = correlation_matrix.where(np.triu(np.ones(correlation_matrix.shape), k=1).astype(bool))
 
@@ -62,6 +64,8 @@ def robustness_chooser(df, threshold, verbose=True):
     """
     df_copy = df.copy()
     dropped_cols = []
+    if threshold < 0 or threshold > 1 or df_copy.empty:
+        raise ValueError
     for col in df_copy.columns:
         valid_count = df_copy[col].replace([0, np.inf, -np.inf], np.nan).notna().sum()
         robustness = valid_count / len(df_copy)
@@ -78,7 +82,7 @@ def robustness_chooser(df, threshold, verbose=True):
 
 def variance_chooser(df, variance_threshold: float, verbose=True):
     """
-    Removes CMs from the DataFrame which have a variance below the specified threshold.
+    Removes CMs from the DataFrame which have a variance below or equal to the specified threshold.
     :param df: The input dataframe containing the features to be evaluated.
     :param variance_threshold: The variance threshold value below which features will be removed.
     :param verbose: A boolean flag to indicate whether to print the names of the removed features.
