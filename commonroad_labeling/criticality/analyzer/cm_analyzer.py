@@ -38,9 +38,11 @@ def correlation_chooser(df, correlation_threshold: float, verbose=True):
     """
     Finds CMs that are highly correlated and removes one of them from the DataFrame.
     :param df: Input DataFrame that contains the data on which correlation-based feature selection is to be performed.
-    :param correlation_threshold: The threshold for correlation above which columns will be considered highly correlated and may be dropped.
+    :param correlation_threshold: The threshold for correlation above which columns will be considered highly correlated
+        and may be dropped.
     :param verbose: When set to True, prints detailed information about which columns are being dropped and why.
-    :return: A tuple containing the DataFrame after dropping the highly correlated columns and a list of the columns that were dropped.
+    :return: A tuple containing the DataFrame after dropping the highly correlated columns and a list of the columns
+        that were dropped.
     """
     if df.empty:
         raise ValueError
@@ -75,7 +77,8 @@ def robustness_chooser(df, threshold, verbose=True):
     :param df: The original DataFrame to be processed.
     :param threshold: The robustness threshold value below which columns will be dropped.
     :param verbose: A boolean flag to indicate whether to print details of the columns being dropped. Default is True.
-    :return: A tuple containing the modified DataFrame with less robust columns removed and a list of the dropped columns.
+    :return: A tuple containing the modified DataFrame with less robust columns removed and a list of the dropped
+        columns.
     """
     df_copy = df.copy()
     dropped_cols = []
@@ -180,7 +183,8 @@ def choose_and_scale_metrics(
 def scale_metrics(df: pd.DataFrame):
     """
     Applies min-max scaling to the input DataFrame, ignoring metadata columns.
-    :param df: Pandas DataFrame containing the data to be scaled. Expected to have specific columns defined in METADATA_COLUMN_NAMES.
+    :param df: Pandas DataFrame containing the data to be scaled. Expected to have specific columns defined in
+        METADATA_COLUMN_NAMES.
     :return: A new DataFrame with metadata columns retained and the remaining columns scaled using Min-Max scaling.
     """
     df_no_metadata = df.drop(METADATA_COLUMN_NAMES, axis=1)
@@ -237,12 +241,16 @@ def add_percentile_column(df, column_name):
 
 def filter_by_quantile(df, column_name, lower_quantile, upper_quantile):
     """
-    Filters the input DataFrame to include only rows where the specified column's value is between the specified lower and upper quantiles.
+    Filters the input DataFrame to include only rows where the specified column's value is between the
+        specified lower and upper quantiles.
     :param df: The DataFrame containing the data to be filtered.
     :param column_name: The name of the column on which to apply the quantile filter.
-    :param lower_quantile: The lower quantile value used as the filter's lower bound (e.g., 0.25 for the 25th percentile).
-    :param upper_quantile: The upper quantile value used as the filter's upper bound (e.g., 0.75 for the 75th percentile).
-    :return: A DataFrame filtered to include only the rows where the specified column's value is between the specified lower and upper quantiles.
+    :param lower_quantile: The lower quantile value used as the filter's lower bound
+        (e.g., 0.25 for the 25th percentile).
+    :param upper_quantile: The upper quantile value used as the filter's upper bound
+        (e.g., 0.75 for the 75th percentile).
+    :return: A DataFrame filtered to include only the rows where the specified column's value is between
+        the specified lower and upper quantiles.
     """
     lower_bound = df[column_name].quantile(lower_quantile)
     upper_bound = df[column_name].quantile(upper_quantile)
@@ -260,7 +268,8 @@ def analyze_criticality(
 ):
     """
     Performs the full analysis of the input CriticalityData objects, including feature selection and data-preprocessing.
-    :param crit_data_list: A list of ScenarioCriticalityData objects that contain the criticality data for different scenarios.
+    :param crit_data_list: A list of ScenarioCriticalityData objects that contain the criticality data for different
+        scenarios.
     :param filter_metrics: A boolean flag that indicates whether to filter metrics before proceeding with the analysis.
     :param robustness_threshold: The threshold value for filtering metrics based on robustness.
     :param correlation_threshold: The threshold value for filtering metrics based on correlation.
@@ -268,7 +277,8 @@ def analyze_criticality(
     :param verbose: A boolean flag to enable or disable verbose output during the analysis.
     :return: A tuple containing the following:
         - DataFrame with average criticality values for each scenario and ego pair, including percentiles.
-        - DataFrame with the most dangerous timestep's average criticality for each scenario and ego pair, including percentiles.
+        - DataFrame with the most dangerous timestep's average criticality for each scenario and ego pair,
+            including percentiles.
         - List of accepted metrics after filtering, or None if metrics were not filtered.
     """
 
@@ -323,7 +333,8 @@ def crit_data_to_df(crit_data_list: list[ScenarioCriticalityData]) -> pd.DataFra
     """
     Converts ScenarioCriticalityData objects to a pandas DataFrame.
     :param crit_data_list: List of ScenarioCriticalityData objects containing criticality data.
-    :return: A pandas DataFrame where each row represents criticality data for a specific scenario + ego vehicle combination and timestep.
+    :return: A pandas DataFrame where each row represents criticality data for a specific
+        scenario + ego vehicle combination and timestep.
     """
     criticality_dict_lists = []
     for scenario_data in crit_data_list:

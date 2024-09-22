@@ -19,7 +19,8 @@ from commonroad_rp.utility.visualization import make_gif, visualize_planner_at_t
 
 class TrajectoryInserter:
     """
-    TrajectoryInserter simulates the trajectory of the ego vehicle using Reactive Planner and inserts it into the scenario.
+    TrajectoryInserter simulates the trajectory of the ego vehicle using Reactive Planner and inserts it into the
+     scenario.
     """
 
     def __init__(self, save_plots=False, show_plots=False, do_make_gif=False, do_log=False):
@@ -39,8 +40,10 @@ class TrajectoryInserter:
         """
         Simulates the trajectory of the ego vehicle using Reactive Planner and inserts it into the scenario.
         :param scenario: The scenario object matching the planning problem set.
-        :param planning_problem_set: A planning problem set containing a single planing problem, for which an ego vehicle should be simulated.
-        :return: A tuple containing the updated scenario with the ego vehicle inserted as a dynamic obstacle, and the unique ID assigned to the ego vehicle.
+        :param planning_problem_set: A planning problem set containing a single planing problem, for which an
+            ego vehicle should be simulated.
+        :return: A tuple containing the updated scenario with the ego vehicle inserted as a dynamic obstacle,
+            and the unique ID assigned to the ego vehicle.
         """
         scenario_with_ego = deepcopy(scenario)
 
@@ -83,8 +86,10 @@ class TrajectoryInserter:
         """
         Simulates the trajectory of the ego vehicle with Reactive Planner.
         :param scenario: The scenario object matching the planning problem set.
-        :param planing_problem_set: A planning problem set containing a single planing problem, for which an ego vehicle should be simulated.
-        :return: A tuple containing the recorded state list of the planner throughout the simulation and the vehicle parameters.
+        :param planing_problem_set: A planning problem set containing a single planing problem,
+            for which an ego vehicle should be simulated.
+        :return: A tuple containing the recorded state list of the planner throughout the simulation
+            and the vehicle parameters.
         """
         config = self.create_config(planing_problem_set, scenario)
 
@@ -193,7 +198,8 @@ class TrajectoryInserter:
         """
         Creates a ReactivePlannerConfiguration.
         :param scenario: The scenario object matching the planning problem set.
-        :param planing_problem_set: A planning problem set containing a single planing problem, for which an ego vehicle should be simulated.
+        :param planing_problem_set: A planning problem set containing a single planing problem,
+            for which an ego vehicle should be simulated.
         :return: A configured ReactivePlannerConfiguration instance.
         """
         # Get planing_problem from planing_problem_set
@@ -222,7 +228,8 @@ class TrajectoryInserter:
     def get_planing_problem(self, planing_problem_set):
         """
         Returns the planning problem from a planning problem set.
-        :param planing_problem_set: A planning problem set containing a single planing problem, for which an ego vehicle should be simulated.
+        :param planing_problem_set: A planning problem set containing a single planing problem,
+            for which an ego vehicle should be simulated.
         :return: The single planning problem from the set.
         :raises RuntimeError: If the number of planning problems in the set is not exactly one.
         """

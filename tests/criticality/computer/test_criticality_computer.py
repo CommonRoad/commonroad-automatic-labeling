@@ -75,6 +75,7 @@ metrics = [
     DCE,
 ]
 
+
 # TODO: Only testing for one scenario currently! Should be increased if performance allows it.
 @pytest.mark.parametrize("scenario_path", list(Path.cwd().joinpath("test_scenarios").iterdir())[:1])
 @pytest.mark.parametrize("metric", metrics)

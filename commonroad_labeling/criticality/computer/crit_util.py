@@ -1,6 +1,4 @@
 from commonroad.common.file_reader import CommonRoadFileReader
-from commonroad.scenario.state import InitialState
-from commonroad_rp.state import ReactivePlannerState
 
 """
     Provides utility functions necessary to compute the CMs of scenarios.
