@@ -7,7 +7,7 @@ from commonroad_labeling.criticality.analyzer.cm_analyzer import (
     filter_by_quantile,
 )
 from commonroad_labeling.criticality.input_output.crime_output import (
-    parse_crime_output_dirs_to_object,
+    parse_crime_output_dirs_to_object, parse_crime_output_dir_to_object,
 )
 
 # -----------------------------------------------------------------------------------------------------------
