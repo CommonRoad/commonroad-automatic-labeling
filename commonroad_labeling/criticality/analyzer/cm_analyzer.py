@@ -249,7 +249,6 @@ def analyze_criticality(
         - List of accepted metrics after filtering, or None if metrics were not filtered.
     """
 
-    # TODO Comment this function better
     df = crit_data_to_df(crit_data_list)
 
     if filter_metrics:
