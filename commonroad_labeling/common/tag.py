@@ -173,9 +173,7 @@ class RouteTag(Tag, ABC):
         This method calculates the lanelets from the current `route` attribute value
         :returns: List of lanelets from the given route in the given scenario.
         """
-        return [
-            self.route.lanelet_network.find_lanelet_by_id(lanelet_id) for lanelet_id in self.route.list_ids_lanelets
-        ]
+        return [self.route.lanelet_network.find_lanelet_by_id(lanelet_id) for lanelet_id in self.route.lanelet_ids]
 
     def is_fulfilled(self) -> bool:
         """
@@ -214,6 +212,4 @@ class EgoVehicleGoalTag(Tag, ABC):
         This method calculates the lanelets from the current `route` attribute value
         :returns: list of lanelets from the given route in the given scenario
         """
-        return [
-            self.route.lanelet_network.find_lanelet_by_id(lanelet_id) for lanelet_id in self.route.list_ids_lanelets
-        ]
+        return [self.route.lanelet_network.find_lanelet_by_id(lanelet_id) for lanelet_id in self.route.lanelet_ids]

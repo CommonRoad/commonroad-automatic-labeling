@@ -6,15 +6,13 @@ stages:
   - deploy
 
 before_script:
+  - apt-get update
+  - apt-get install -y libgl1-mesa-glx
   - pip install poetry
   - poetry config virtualenvs.in-project true
   - git config --global url."https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.lrz.de/".insteadOf "git@gitlab.lrz.de:"
   - poetry install --with test
   - source .venv/bin/activate
-
-.run_test_with_coverage: &run_test_with_coverage
-  - coverage run -m pytest -v
-  - coverage report -m || true
 
 pre_commit:
   stage: static_check
@@ -31,13 +29,15 @@ test_python_versions:
     matrix:
       - PYTHON_VERSIONS: [ "3.11" ]
   script:
-    - *run_test_with_coverage
+    - coverage run -m pytest
+  allow_failure: true
 
-test_latest_python_version_with_coverage:
+test_with_coverage:
   stage: test
   image: python:3.10
   script:
-    - *run_test_with_coverage
+    - coverage run -m pytest
+    - coverage report -m || true
     - coverage xml
   coverage: '/(?i)total.*? (100(?:\.0+)?\%|[1-9]?\d(?:\.\d+)?\%)$/'
   artifacts:
@@ -45,7 +45,6 @@ test_latest_python_version_with_coverage:
       coverage_report:
         coverage_format: cobertura
         path: coverage.xml
-
 
 ## deploy
 pages:

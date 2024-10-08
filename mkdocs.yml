@@ -19,3 +19,8 @@ nav:
         - "Scenario": road_configuration_scenario.md
         - "Route": road_configuration_route.md
       - "Ego vehicle goal": ego_vehicle_goal.md
+      - "Criticality Labeling":
+          - "Criticality Metric Computer": cm_computer.md
+          - "CriMe Output": crime_output.md
+          - "Trajectory Inserter": trajectory_inserter.md
+          - "Criticality Analyzer": criticality_analyzer.md
