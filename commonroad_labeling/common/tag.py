@@ -174,7 +174,7 @@ class RouteTag(Tag, ABC):
         :returns: List of lanelets from the given route in the given scenario.
         """
         return [
-            self.route.lanelet_network.find_lanelet_by_id(lanelet_id) for lanelet_id in self.route.list_ids_lanelets
+            self.route.lanelet_network.find_lanelet_by_id(lanelet_id) for lanelet_id in self.route.lanelet_ids
         ]
 
     def is_fulfilled(self) -> bool:
@@ -215,5 +215,5 @@ class EgoVehicleGoalTag(Tag, ABC):
         :returns: list of lanelets from the given route in the given scenario
         """
         return [
-            self.route.lanelet_network.find_lanelet_by_id(lanelet_id) for lanelet_id in self.route.list_ids_lanelets
+            self.route.lanelet_network.find_lanelet_by_id(lanelet_id) for lanelet_id in self.route.lanelet_ids
         ]

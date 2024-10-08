@@ -110,7 +110,7 @@ def get_planned_routes(scenario: Scenario, planning_problem_set: PlanningProblem
     """
     routes = []
     for planning_problem in list(planning_problem_set.planning_problem_dict.values()):
-        route_planner = RoutePlanner(scenario, planning_problem, backend=RoutePlanner.Backend.NETWORKX_REVERSED)
+        route_planner = RoutePlanner(scenario.lanelet_network, planning_problem)
         calculated_routes = route_planner.plan_routes().retrieve_all_routes()
 
         routes = [*routes, *(calculated_routes[0])]
