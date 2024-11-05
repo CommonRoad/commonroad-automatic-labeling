@@ -104,13 +104,13 @@ class TrajectoryInserter:
         # Initialize Planner
         # *************************************
         # run route planner and add reference path to config
-        route_planner = RoutePlanner(config.scenario, config.planning_problem)
+        route_planner = RoutePlanner(config.scenario.lanelet_network, config.planning_problem)
         route = route_planner.plan_routes().retrieve_first_route()
         config.planning.route = route
-        config.planning.reference_path = route.reference_path
 
         # initialize reactive planner
         planner = ReactivePlanner(config)
+        planner.set_reference_path(route.reference_path)
 
         # **************************
         # Run Planning
