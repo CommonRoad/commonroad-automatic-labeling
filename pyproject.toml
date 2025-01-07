@@ -1,9 +1,13 @@
-[tool.poetry]
+[project]
 name = "commonroad-labeling"
 version = "0.1.0"
 description = "Automatic labeling of CommonRoad scenarios."
-authors = ["Florian Finkeldei <florian.finkeldei@tum.de>", "Dzan Tabakovic <dzan.tabakovic@tum.de>"]
+authors = [{name = "Florian Finkeldei", email = "florian.finkeldei@tum.de"}, {name = "Dzan Tabakovic", email ="dzan.tabakovic@tum.de"}]
 readme = "README.md"
+requires-python = ">=3.10"
+dynamic = ["dependencies"]
+
+[tool.poetry]
 packages = [{include = "commonroad_labeling"}, { include = "scripts"}]
 
 [tool.poetry.dependencies]
