@@ -2,6 +2,7 @@
 import logging
 from copy import deepcopy
 
+import commonroad_route_planner.fast_api.fast_api as route_planner_fapi
 from commonroad.geometry.shape import Rectangle
 from commonroad.planning.planning_problem import PlanningProblemSet
 from commonroad.prediction.prediction import TrajectoryPrediction
@@ -9,7 +10,6 @@ from commonroad.scenario.obstacle import DynamicObstacle, ObstacleType
 from commonroad.scenario.scenario import Scenario
 from commonroad.scenario.state import InitialState
 from commonroad.scenario.trajectory import Trajectory
-from commonroad_route_planner.route_planner import RoutePlanner
 from commonroad_rp.reactive_planner import ReactivePlanner
 from commonroad_rp.state import ReactivePlannerState
 from commonroad_rp.utility.config import ReactivePlannerConfiguration
@@ -104,13 +104,14 @@ class TrajectoryInserter:
         # Initialize Planner
         # *************************************
         # run route planner and add reference path to config
-        route_planner = RoutePlanner(config.scenario.lanelet_network, config.planning_problem)
-        route = route_planner.plan_routes().retrieve_first_route()
-        config.planning.route = route
+
+        reference_path = route_planner_fapi.generate_reference_path_from_lanelet_network_and_planning_problem(
+            scenario.lanelet_network, config.planning_problem
+        )
 
         # initialize reactive planner
         planner = ReactivePlanner(config)
-        planner.set_reference_path(route.reference_path)
+        planner.set_reference_path(reference_path.reference_path)
 
         # **************************
         # Run Planning
@@ -145,7 +146,7 @@ class TrajectoryInserter:
                 # reset planner state for re-planning
                 planner.reset(
                     initial_state_cart=planner.record_state_list[-1],
-                    initial_state_curv=(optimal[2][1], optimal[3][1]),
+                    initial_state_curv=(optimal[1][1], optimal[2][1]),
                     collision_checker=planner.collision_checker,
                     coordinate_system=planner.coordinate_system,
                 )
@@ -169,7 +170,7 @@ class TrajectoryInserter:
                 # reset planner state for re-planning
                 planner.reset(
                     initial_state_cart=planner.record_state_list[-1],
-                    initial_state_curv=(optimal[2][1 + temp], optimal[3][1 + temp]),
+                    initial_state_curv=(optimal[1][1 + temp], optimal[2][1 + temp]),
                     collision_checker=planner.collision_checker,
                     coordinate_system=planner.coordinate_system,
                 )

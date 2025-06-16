@@ -3,7 +3,7 @@ from typing import Tuple
 
 from commonroad.common.file_reader import CommonRoadFileReader
 from commonroad.scenario.scenario import Scenario
-from commonroad_route_planner.route import Route
+from commonroad_route_planner.reference_path import ReferencePath
 
 from commonroad_labeling.common.general import get_planned_routes
 from commonroad_labeling.common.tag import TagEnum
@@ -172,7 +172,7 @@ def get_scenarios() -> list[Scenario]:
     return scenarios
 
 
-def get_scenarios_with_routes() -> list[Tuple[Scenario, list[Route]]]:
+def get_scenarios_with_routes() -> list[Tuple[Scenario, list[ReferencePath]]]:
     path = pathlib.Path.cwd().joinpath("..", "scenarios")
     scenarios_and_routes = []
     for filename in path.glob("*.cr.xml"):
@@ -180,10 +180,5 @@ def get_scenarios_with_routes() -> list[Tuple[Scenario, list[Route]]]:
         routes = get_planned_routes(scenario, planning_problem)
 
         scenarios_and_routes.append((scenario, routes))
-
-    # TODO: why is scenario changed to the latest route?
-    for scenario, routes in scenarios_and_routes:
-        for route in routes:
-            route.scenario = scenario
 
     return scenarios_and_routes

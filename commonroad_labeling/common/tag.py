@@ -4,7 +4,7 @@ from enum import Enum
 
 from commonroad.scenario.lanelet import Lanelet
 from commonroad.scenario.scenario import Scenario
-from commonroad_route_planner.route import Route
+from commonroad_route_planner.reference_path import ReferencePath
 
 enum_delimiter = "|"
 
@@ -155,7 +155,7 @@ class RouteTag(Tag, ABC):
     that have similar detection patterns.
     """
 
-    def __init__(self, route: Route, scenario_tag: ScenarioTag):
+    def __init__(self, route: ReferencePath, scenario_tag: ScenarioTag):
         """
         Initializes the superclass, the `route` attribute with the corresponding ego vehicle route in the scenario and
         the subclass of `ScenarioTag` for `scenario_tag` used to detect whether any lanelets in a route
@@ -173,7 +173,10 @@ class RouteTag(Tag, ABC):
         This method calculates the lanelets from the current `route` attribute value
         :returns: List of lanelets from the given route in the given scenario.
         """
-        return [self.route.lanelet_network.find_lanelet_by_id(lanelet_id) for lanelet_id in self.route.lanelet_ids]
+        return [
+            self.scenario_tag.scenario.lanelet_network.find_lanelet_by_id(lanelet_id)
+            for lanelet_id in self.route.lanelet_ids
+        ]
 
     def is_fulfilled(self) -> bool:
         """
@@ -197,7 +200,7 @@ class EgoVehicleGoalTag(Tag, ABC):
     similar detection patterns.
     """
 
-    def __init__(self, route: Route):
+    def __init__(self, route: ReferencePath, scenario: Scenario):
         """
         Initializes the class with the given route.
         :param route: specifies a route that an ego vehicle could take for a given scenario and
@@ -205,6 +208,7 @@ class EgoVehicleGoalTag(Tag, ABC):
         """
         super().__init__()
         self.route = route
+        self.scenario = scenario
 
     # TODO: future improvement - get actual vehicle path instead of the high level route
     def get_route_lanelets(self) -> list[Lanelet]:
@@ -212,4 +216,4 @@ class EgoVehicleGoalTag(Tag, ABC):
         This method calculates the lanelets from the current `route` attribute value
         :returns: list of lanelets from the given route in the given scenario
         """
-        return [self.route.lanelet_network.find_lanelet_by_id(lanelet_id) for lanelet_id in self.route.lanelet_ids]
+        return [self.scenario.lanelet_network.find_lanelet_by_id(lanelet_id) for lanelet_id in self.route.lanelet_ids]

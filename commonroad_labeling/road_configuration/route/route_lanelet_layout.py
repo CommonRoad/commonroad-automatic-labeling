@@ -1,4 +1,5 @@
-from commonroad_route_planner.route import Route
+from commonroad.scenario.scenario import Scenario
+from commonroad_route_planner.reference_path import ReferencePath
 
 from commonroad_labeling.common.tag import RouteTag, TagEnum
 from commonroad_labeling.road_configuration.scenario.scenario_lanelet_layout import (
@@ -18,7 +19,7 @@ class RouteLaneletLayoutSingleLane(RouteTag):
     This class is used to detect whether the ego vehicle should encounter a single lane road.
     """
 
-    def __init__(self, route: Route):
+    def __init__(self, route: ReferencePath, scenario: Scenario):
         """
         Initializes the class with the given route and initializes the `scenario_tag` attribute with
         an instance of `LaneletLayoutSingleLane` class in order to check every lanelet of the route for
@@ -26,7 +27,7 @@ class RouteLaneletLayoutSingleLane(RouteTag):
         :param route: specifies a route for which the class should detect a single lane road and it is passed
         to the constructor of the superclass `common.tag.RouteTag`.
         """
-        super().__init__(route, LaneletLayoutSingleLane(route.scenario))
+        super().__init__(route, LaneletLayoutSingleLane(scenario))
 
     def get_tag(self) -> TagEnum:
         """
@@ -41,7 +42,7 @@ class RouteLaneletLayoutMultiLane(RouteTag):
     This class is used to detect whether the ego vehicle should encounter a multi lane road.
     """
 
-    def __init__(self, route: Route):
+    def __init__(self, route: ReferencePath, scenario: Scenario):
         """
         Initializes the class with the given route and initializes the `scenario_tag` attribute with
         an instance of `LaneletLayoutMultiLane` class in order to check every lanelet of the route for
@@ -49,7 +50,7 @@ class RouteLaneletLayoutMultiLane(RouteTag):
         :param route: specifies a route for which the class should detect a multi lane road and it is passed
         to the constructor of the superclass `common.tag.RouteTag`.
         """
-        super().__init__(route, LaneletLayoutMultiLane(route.scenario))
+        super().__init__(route, LaneletLayoutMultiLane(scenario))
 
     def get_tag(self) -> TagEnum:
         """
@@ -64,7 +65,7 @@ class RouteLaneletLayoutBidirectional(RouteTag):
     This class is used to detect whether the ego vehicle should encounter a bidirectional road.
     """
 
-    def __init__(self, route: Route):
+    def __init__(self, route: ReferencePath, scenario: Scenario):
         """
         Initializes the class with the given route and initializes the `scenario_tag` attribute with
         an instance of `LaneletLayoutBidirectional` class in order to check every lanelet of the route for
@@ -72,7 +73,7 @@ class RouteLaneletLayoutBidirectional(RouteTag):
         :param route: specifies a route for which the class should detect a bidirectional road and it is passed
         to the constructor of the superclass `common.tag.RouteTag`.
         """
-        super().__init__(route, LaneletLayoutBidirectional(route.scenario))
+        super().__init__(route, LaneletLayoutBidirectional(scenario))
 
     def get_tag(self) -> TagEnum:
         """
@@ -87,7 +88,7 @@ class RouteLaneletLayoutOneWay(RouteTag):
     This class is used to detect whether the ego vehicle should encounter a one way road.
     """
 
-    def __init__(self, route: Route):
+    def __init__(self, route: ReferencePath, scenario: Scenario):
         """
         Initializes the class with the given route and initializes the `scenario_tag` attribute with
         an instance of `LaneletLayoutOneWay` class in order to check every lanelet of the route for
@@ -95,7 +96,7 @@ class RouteLaneletLayoutOneWay(RouteTag):
         :param route: specifies a route for which the class should detect a one way road and it is passed
         to the constructor of the superclass `common.tag.RouteTag`.
         """
-        super().__init__(route, LaneletLayoutOneWay(route.scenario))
+        super().__init__(route, LaneletLayoutOneWay(scenario))
 
     def get_tag(self) -> TagEnum:
         """
@@ -110,7 +111,7 @@ class RouteLaneletLayoutIntersection(RouteTag):
     This class is used to detect whether the ego vehicle should encounter an intersection.
     """
 
-    def __init__(self, route: Route):
+    def __init__(self, route: ReferencePath, scenario: Scenario):
         """
         Initializes the class with the given route and initializes the `scenario_tag` attribute with
         an instance of `LaneletLayoutIntersection` class in order to check every lanelet of the route for
@@ -118,7 +119,7 @@ class RouteLaneletLayoutIntersection(RouteTag):
         :param route: specifies a route for which the class should detect an intersection and it is passed
         to the constructor of the superclass `common.tag.RouteTag`.
         """
-        super().__init__(route, LaneletLayoutIntersection(route.scenario))
+        super().__init__(route, LaneletLayoutIntersection(scenario))
 
     def get_tag(self) -> TagEnum:
         """
@@ -133,7 +134,7 @@ class RouteLaneletLayoutDivergingLane(RouteTag):
     This class is used to detect whether the ego vehicle should encounter a diverging lane.
     """
 
-    def __init__(self, route: Route):
+    def __init__(self, route: ReferencePath, scenario: Scenario):
         """
         Initializes the class with the given route and initializes the `scenario_tag` attribute with
         an instance of `LaneletLayoutDivergingLane` class in order to check every lanelet of the route for
@@ -141,7 +142,7 @@ class RouteLaneletLayoutDivergingLane(RouteTag):
         :param route: specifies a route for which the class should detect a diverging lane and it is passed
         to the constructor of the superclass `common.tag.RouteTag`.
         """
-        super().__init__(route, LaneletLayoutDivergingLane(route.scenario))
+        super().__init__(route, LaneletLayoutDivergingLane(scenario))
 
     def get_tag(self) -> TagEnum:
         """
@@ -156,7 +157,7 @@ class RouteLaneletLayoutMergingLane(RouteTag):
     This class is used to detect whether the ego vehicle should encounter a merging lane.
     """
 
-    def __init__(self, route: Route):
+    def __init__(self, route: ReferencePath, scenario: Scenario):
         """
         Initializes the class with the given route and initializes the `scenario_tag` attribute with
         an instance of `LaneletLayoutMergingLane` class in order to check every lanelet of the route for
@@ -164,7 +165,7 @@ class RouteLaneletLayoutMergingLane(RouteTag):
         :param route: specifies a route for which the class should detect a merging lane and it is passed
         to the constructor of the superclass `common.tag.RouteTag`.
         """
-        super().__init__(route, LaneletLayoutMergingLane(route.scenario))
+        super().__init__(route, LaneletLayoutMergingLane(scenario))
 
     def get_tag(self) -> TagEnum:
         """
@@ -179,7 +180,7 @@ class RouteLaneletLayoutRoundabout(RouteTag):
     This class is used to detect whether the ego vehicle should encounter a roundabout.
     """
 
-    def __init__(self, route: Route):
+    def __init__(self, route: ReferencePath, scenario: Scenario):
         """
         Initializes the class with the given route and initializes the `scenario_tag` attribute with
         an instance of `LaneletLayoutRoundabout` class in order to check every lanelet of the route for
@@ -187,7 +188,7 @@ class RouteLaneletLayoutRoundabout(RouteTag):
         :param route: specifies a route for which the class should detect a roundabout and it is passed
         to the constructor of the superclass `common.tag.RouteTag`.
         """
-        super().__init__(route, LaneletLayoutRoundabout(route.scenario))
+        super().__init__(route, LaneletLayoutRoundabout(scenario))
 
     def get_tag(self) -> TagEnum:
         """

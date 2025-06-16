@@ -1,4 +1,5 @@
-from commonroad_route_planner.route import Route
+from commonroad.scenario.scenario import Scenario
+from commonroad_route_planner.reference_path import ReferencePath
 
 from commonroad_labeling.common.tag import RouteTag, TagEnum
 from commonroad_labeling.road_configuration.scenario.scenario_obstacle import (
@@ -13,7 +14,7 @@ class RouteObstacleStatic(RouteTag):
     This class is used to detect whether the ego vehicle should encounter static obstacles.
     """
 
-    def __init__(self, route: Route):
+    def __init__(self, route: ReferencePath, scenario: Scenario):
         """
         Initializes the class with the given route and initializes the `scenario_tag` attribute with
         an instance of `ObstacleStatic` class in order to check every lanelet of the route for
@@ -21,7 +22,7 @@ class RouteObstacleStatic(RouteTag):
         :param route: specifies a route for which the class should detect static obstacles and it is passed
         to the constructor of the superclass `common.tag.RouteTag`.
         """
-        super().__init__(route, ObstacleStatic(route.scenario))
+        super().__init__(route, ObstacleStatic(scenario))
 
     def get_tag(self) -> TagEnum:
         """
@@ -37,7 +38,7 @@ class RouteObstacleOtherDynamic(RouteTag):
     that cannot be classified as traffic).
     """
 
-    def __init__(self, route: Route):
+    def __init__(self, route: ReferencePath, scenario: Scenario):
         """
         Initializes the class with the given route and initializes the `scenario_tag` attribute with
         an instance of `ObstacleOtherDynamic` class in order to check every lanelet of the route for
@@ -45,7 +46,7 @@ class RouteObstacleOtherDynamic(RouteTag):
         :param route: specifies a route for which the class should detect other dynamic obstacles and it is passed
         to the constructor of the superclass `common.tag.RouteTag`.
         """
-        super().__init__(route, ObstacleOtherDynamic(route.scenario))
+        super().__init__(route, ObstacleOtherDynamic(scenario))
 
     def get_tag(self) -> TagEnum:
         """
@@ -60,7 +61,7 @@ class RouteTrafficAhead(RouteTag):
     This class is used to detect whether the ego vehicle should encounter traffic ahead in it's route.
     """
 
-    def __init__(self, route: Route):
+    def __init__(self, route: ReferencePath, scenario: Scenario):
         """
         Initializes the class with the given route and initializes the `scenario_tag` attribute with
         an instance of `ObstacleTraffic` class in order to check every lanelet of the route for
@@ -68,7 +69,7 @@ class RouteTrafficAhead(RouteTag):
         :param route: specifies a route for which the class should detect traffic ahead and it is passed
         to the constructor of the superclass `common.tag.RouteTag`.
         """
-        super().__init__(route, ObstacleTraffic(route.scenario))
+        super().__init__(route, ObstacleTraffic(scenario))
 
     def get_tag(self) -> TagEnum:
         """
@@ -83,7 +84,7 @@ class RouteTrafficBehind(RouteTag):
     This class is used to detect whether the ego vehicle should encounter traffic behind it in it's route.
     """
 
-    def __init__(self, route: Route):
+    def __init__(self, route: ReferencePath, scenario: Scenario):
         """
         Initializes the class with the given route and initializes the `scenario_tag` attribute with
         an instance of `ObstacleTraffic` class in order to check every lanelet of the route for
@@ -91,7 +92,7 @@ class RouteTrafficBehind(RouteTag):
         :param route: specifies a route for which the class should detect traffic behind and it is passed
         to the constructor of the superclass `common.tag.RouteTag`.
         """
-        super().__init__(route, ObstacleTraffic(route.scenario))
+        super().__init__(route, ObstacleTraffic(scenario))
 
     def is_fulfilled(self) -> bool:
         """
@@ -123,7 +124,7 @@ class RouteOncomingTraffic(RouteTag):
     This class is used to detect whether the ego vehicle should encounter (no) oncoming traffic in it's route.
     """
 
-    def __init__(self, route: Route):
+    def __init__(self, route: ReferencePath, scenario: Scenario):
         """
         Initializes the class with the given route and initializes the `scenario_tag` attribute with
         an instance of `ObstacleTraffic` class in order to check every lanelet of the route for
@@ -131,7 +132,7 @@ class RouteOncomingTraffic(RouteTag):
         :param route: specifies a route for which the class should detect either oncoming or no oncoming traffic and
         it is passed to the constructor of the superclass `common.tag.RouteTag`.
         """
-        super().__init__(route, ObstacleTraffic(route.scenario))
+        super().__init__(route, ObstacleTraffic(scenario))
 
     def is_fulfilled(self) -> bool:
         """
