@@ -335,25 +335,25 @@ test = ["parameterized (>=0.9.0,<0.10.0)", "pytest (>=3.8.0)"]
 
 [[package]]
 name = "commonroad-crime"
-version = "0.4.3"
+version = "0.4.4"
 description = "criticality measures of automated vehicles"
 optional = false
 python-versions = "*"
 groups = ["main"]
 markers = "python_version <= \"3.11\""
 files = [
-    {file = "commonroad_crime-0.4.3-py3-none-any.whl", hash = "sha256:592e3c0dd48b73706aac689f47aaf0cb1e8becb0c8894bc6e965de946d282e56"},
-    {file = "commonroad_crime-0.4.3.tar.gz", hash = "sha256:503a04a1e2b9ffc435feb8aeeb83eb96d2600fa8367f584003fb93b409483c07"},
+    {file = "commonroad_crime-0.4.4-py3-none-any.whl", hash = "sha256:5fd858eaf77d731c73b1e4edb6c9a3d4adc73ddeb96bc8a1125d329eb744f57f"},
+    {file = "commonroad_crime-0.4.4.tar.gz", hash = "sha256:1252e7c32053b6250b6b4311ac0c3e71e563be0d5af50a63e173dc21fde7d201"},
 ]
 
 [package.dependencies]
 casadi = ">=3.6.3"
-commonroad-clcs = ">=2025.1.1"
-commonroad-drivability-checker = ">=2025.1"
-commonroad-io = ">=2024.1"
-commonroad-reach = ">=2025.1.0"
-commonroad-route-planner = ">=2025.1.0"
-commonroad-vehicle-models = ">=3.0.0"
+commonroad-clcs = ">=2025.2.0,<2025.3.0"
+commonroad-drivability-checker = ">=2025.3.1,<2025.4.0"
+commonroad-io = ">=2024.1,<2025.0"
+commonroad-reach = ">=2025.2.0,<2025.3.0"
+commonroad-route-planner = ">=2025.1.0,<2025.2.0"
+commonroad-vehicle-models = ">=3.0.0,<3.1.0"
 imageio = ">=2.9.0"
 matplotlib = ">=3.5.2,<3.9"
 numpy = ">=1.19.0"
@@ -365,18 +365,18 @@ tqdm = ">=4.65.0"
 
 [[package]]
 name = "commonroad-drivability-checker"
-version = "2025.3.0"
+version = "2025.3.1"
 description = "Drivability checker for CommonRoad scenarios."
 optional = false
 python-versions = "<3.14,>=3.10"
 groups = ["main"]
 markers = "python_version <= \"3.11\""
 files = [
-    {file = "commonroad_drivability_checker-2025.3.0-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:02252f6e0f7e301d25598a8ab0f98d8bf1e21adcd8f85150ddd8f278eafd6c06"},
-    {file = "commonroad_drivability_checker-2025.3.0-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:3761961a9acff0338726845889dba9c0ed331692d1f7884d47ac065afe2ce8f8"},
-    {file = "commonroad_drivability_checker-2025.3.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:c7c95ed548f796980dbb468fd06ebc259d4a084e87dd6d6a05c531d5a7f6f67e"},
-    {file = "commonroad_drivability_checker-2025.3.0-cp313-cp313-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:8ec84f86cb7fe160e82514b5c979aa08e6557684520a3bd917537471a8be5757"},
-    {file = "commonroad_drivability_checker-2025.3.0.tar.gz", hash = "sha256:e00c34e7f8f9591dd588f00106dae5ce6462ce306588b2b889c920e281c602f2"},
+    {file = "commonroad_drivability_checker-2025.3.1-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:4dce1aa51d0fe866eb3752926757e814278c277a00f571877ea2f971c8bf9207"},
+    {file = "commonroad_drivability_checker-2025.3.1-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:3a3b482356eb2f47f569ffad635e629dbd8058e7a459c777d7a9ebddda48c258"},
+    {file = "commonroad_drivability_checker-2025.3.1-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:9ef4ed7cab2d1f2ee624bbc736685ac90a1c109ab29606e1d46fd4d04e3b787c"},
+    {file = "commonroad_drivability_checker-2025.3.1-cp313-cp313-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:e9a7cbdbbdbebec1ae19877423a3e4f8d3c4428b74f6e1d4fea7533265afb1ba"},
+    {file = "commonroad_drivability_checker-2025.3.1.tar.gz", hash = "sha256:53aa3c8132be81f689d6702fd1ea313f91373ae308b4e7490488e78569c93ac5"},
 ]
 
 [package.dependencies]
@@ -3076,4 +3076,4 @@ test = ["pytest (>=4.6.7)", "pytest-checkdocs (>=1.2.5)", "pytest-checkdocs (>=2
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.10,<3.12"
-content-hash = "93de1fa512381dce7e6e3045c2c098d901b3a0128a9f6368bcec1145c6deab74"
+content-hash = "a87303bd4f2d5d040f2f7c3ab7bc23217fe31b190b4c9ab885449af64e3734b3"
