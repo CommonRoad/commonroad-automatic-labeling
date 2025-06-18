@@ -1,4 +1,5 @@
-from commonroad_route_planner.route import Route
+from commonroad.scenario.scenario import Scenario
+from commonroad_route_planner.reference_path import ReferencePath
 
 from commonroad_labeling.common.tag import EgoVehicleGoalTag, TagEnum
 from commonroad_labeling.road_configuration.scenario.scenario_lanelet_layout import LaneletLayoutIntersection
@@ -9,14 +10,14 @@ class EgoVehicleGoalIntersectionTurnLeft(EgoVehicleGoalTag):
     This class is used to detect whether the ego vehicle turns left in any of the intersections of a given scenario.
     """
 
-    def __init__(self, route: Route):
+    def __init__(self, reference_path: ReferencePath, scenario: Scenario):
         """
         Initializes the class with the given route.
         :param route: Specifies a route that an ego vehicle could take for a given scenario and is passed to the
         constructor of the superclass `common.tag.EgoVehicleGoalTag`.
         """
 
-        super().__init__(route)
+        super().__init__(reference_path, scenario)
 
     def is_fulfilled(self) -> bool:
         """
@@ -28,9 +29,7 @@ class EgoVehicleGoalIntersectionTurnLeft(EgoVehicleGoalTag):
 
         lanelets = self.get_route_lanelets()
         for lanelet in lanelets:
-            intersection = LaneletLayoutIntersection(self.route.scenario).get_intersection_by_lanelet_id(
-                lanelet.lanelet_id
-            )
+            intersection = LaneletLayoutIntersection(self.scenario).get_intersection_by_lanelet_id(lanelet.lanelet_id)
 
             if intersection is not None:
                 for incoming in intersection.incomings:
@@ -52,13 +51,13 @@ class EgoVehicleGoalIntersectionTurnRight(EgoVehicleGoalTag):
     This class is used to detect whether the ego vehicle turns right in any of the intersections of a given scenario.
     """
 
-    def __init__(self, route: Route):
+    def __init__(self, reference_path: ReferencePath, scenario: Scenario):
         """
         Initializes the class with the given route.
         :param route: Specifies a route that an ego vehicle could take for a given scenario and is passed to the
         constructor of the superclass `common.tag.EgoVehicleGoalTag`.
         """
-        super().__init__(route)
+        super().__init__(reference_path, scenario)
 
     def is_fulfilled(self) -> bool:
         """
@@ -70,9 +69,7 @@ class EgoVehicleGoalIntersectionTurnRight(EgoVehicleGoalTag):
 
         lanelets = self.get_route_lanelets()
         for lanelet in lanelets:
-            intersection = LaneletLayoutIntersection(self.route.scenario).get_intersection_by_lanelet_id(
-                lanelet.lanelet_id
-            )
+            intersection = LaneletLayoutIntersection(self.scenario).get_intersection_by_lanelet_id(lanelet.lanelet_id)
 
             if intersection is not None:
                 for incoming in intersection.incomings:
@@ -95,13 +92,13 @@ class EgoVehicleGoalIntersectionProceedStraight(EgoVehicleGoalTag):
     a given scenario.
     """
 
-    def __init__(self, route: Route):
+    def __init__(self, reference_path: ReferencePath, scenario: Scenario):
         """
         Initializes the class with the given route.
         :param route: specifies a route that an ego vehicle could take for a given scenario and is passed to the
         constructor of the superclass `common.tag.EgoVehicleGoalTag`.
         """
-        super().__init__(route)
+        super().__init__(reference_path, scenario)
 
     def is_fulfilled(self) -> bool:
         """
@@ -112,9 +109,7 @@ class EgoVehicleGoalIntersectionProceedStraight(EgoVehicleGoalTag):
         """
         lanelets = self.get_route_lanelets()
         for lanelet in lanelets:
-            intersection = LaneletLayoutIntersection(self.route.scenario).get_intersection_by_lanelet_id(
-                lanelet.lanelet_id
-            )
+            intersection = LaneletLayoutIntersection(self.scenario).get_intersection_by_lanelet_id(lanelet.lanelet_id)
 
             if intersection is not None:
                 for incoming in intersection.incomings:

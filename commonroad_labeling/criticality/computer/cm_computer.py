@@ -22,7 +22,7 @@ class CMComputer:
 
     def __init__(
         self,
-        metrics: list[CriMeBase],
+        metrics: list[type[CriMeBase]],
         verbose=True,
         crime_verbose=False,
         overwrite=True,

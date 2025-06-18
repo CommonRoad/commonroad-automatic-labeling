@@ -1,6 +1,6 @@
 [project]
 name = "commonroad-labeling"
-version = "0.1.0"
+version = "2025.1"
 description = "Automatic labeling of CommonRoad scenarios."
 authors = [{name = "Florian Finkeldei", email = "florian.finkeldei@tum.de"}, {name = "Dzan Tabakovic", email ="dzan.tabakovic@tum.de"}]
 readme = "README.md"
@@ -11,11 +11,11 @@ dynamic = ["dependencies"]
 packages = [{include = "commonroad_labeling"}, { include = "scripts"}]
 
 [tool.poetry.dependencies]
-python = ">=3.10, <3.12"
-commonroad-io = ">=2023.3"
-commonroad-route-planner = ">=2024.2, <2025"
-commonroad-crime = { git = "git@gitlab.lrz.de:cps/commonroad/commonroad-criticality-measures.git", branch = "develop" }
-commonroad-reactive-planner = ">=2023.1"
+python = ">=3.10,<3.12" # python constraint is given by commonroad-reactive-planner, which requires python<3.12.
+commonroad-io = ">=2024.3"
+commonroad-route-planner = ">=2025.1.0"
+commonroad-crime = ">=0.4.4"
+commonroad-reactive-planner = ">=2025.1"
 matplotlib = ">=3.5.2, < 3.9"
 pandas = "^2.2.2"
 scikit-learn = "^1.4"

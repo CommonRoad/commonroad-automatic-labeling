@@ -4,7 +4,8 @@ from pathlib import Path
 from commonroad.common.file_reader import CommonRoadFileReader
 from commonroad.planning.planning_problem import PlanningProblemSet
 from commonroad.scenario.scenario import Scenario
-from commonroad_route_planner.route import Route
+from commonroad_route_planner.reference_path import ReferencePath
+from commonroad_route_planner.reference_path_planner import ReferencePathPlanner
 from commonroad_route_planner.route_planner import RoutePlanner
 
 from commonroad_labeling.common.tag import TagEnum
@@ -101,7 +102,7 @@ def parse_file(path: Path) -> set[TagEnum] | None:
         return None
 
 
-def get_planned_routes(scenario: Scenario, planning_problem_set: PlanningProblemSet) -> list[Route]:
+def get_planned_routes(scenario: Scenario, planning_problem_set: PlanningProblemSet) -> list[ReferencePath]:
     """
     This function extracts all possible routes that an ego vehicle can take in a given scenario.
     :param scenario: Scenario for which the routes need to be extracted.
@@ -111,9 +112,12 @@ def get_planned_routes(scenario: Scenario, planning_problem_set: PlanningProblem
     routes = []
     for planning_problem in list(planning_problem_set.planning_problem_dict.values()):
         route_planner = RoutePlanner(scenario.lanelet_network, planning_problem)
-        calculated_routes = route_planner.plan_routes().retrieve_all_routes()
+        calculated_routes = route_planner.plan_routes()
+        reference_path_planner = ReferencePathPlanner(scenario.lanelet_network, planning_problem, calculated_routes)
 
-        routes = [*routes, *(calculated_routes[0])]
+        reference_paths, _ = reference_path_planner.plan_all_reference_paths()
+
+        routes.extend(reference_paths)
 
     return routes
 
@@ -156,32 +160,32 @@ def find_scenario_tags(path_to_file: Path) -> set[TagEnum]:
 
     for route in routes:
         # Route lanelet layout tags
-        detected_tags.add(RouteLaneletLayoutSingleLane(route).get_tag_if_fulfilled())
-        detected_tags.add(RouteLaneletLayoutMultiLane(route).get_tag_if_fulfilled())
-        detected_tags.add(RouteLaneletLayoutBidirectional(route).get_tag_if_fulfilled())
-        detected_tags.add(RouteLaneletLayoutOneWay(route).get_tag_if_fulfilled())
-        detected_tags.add(RouteLaneletLayoutIntersection(route).get_tag_if_fulfilled())
-        detected_tags.add(RouteLaneletLayoutDivergingLane(route).get_tag_if_fulfilled())
-        detected_tags.add(RouteLaneletLayoutMergingLane(route).get_tag_if_fulfilled())
-        detected_tags.add(RouteLaneletLayoutRoundabout(route).get_tag_if_fulfilled())
+        detected_tags.add(RouteLaneletLayoutSingleLane(route, scenario).get_tag_if_fulfilled())
+        detected_tags.add(RouteLaneletLayoutMultiLane(route, scenario).get_tag_if_fulfilled())
+        detected_tags.add(RouteLaneletLayoutBidirectional(route, scenario).get_tag_if_fulfilled())
+        detected_tags.add(RouteLaneletLayoutOneWay(route, scenario).get_tag_if_fulfilled())
+        detected_tags.add(RouteLaneletLayoutIntersection(route, scenario).get_tag_if_fulfilled())
+        detected_tags.add(RouteLaneletLayoutDivergingLane(route, scenario).get_tag_if_fulfilled())
+        detected_tags.add(RouteLaneletLayoutMergingLane(route, scenario).get_tag_if_fulfilled())
+        detected_tags.add(RouteLaneletLayoutRoundabout(route, scenario).get_tag_if_fulfilled())
 
         # Obstacles tags
-        detected_tags.add(RouteObstacleStatic(route).get_tag_if_fulfilled())
-        detected_tags.add(RouteObstacleOtherDynamic(route).get_tag_if_fulfilled())
-        detected_tags.add(RouteTrafficAhead(route).get_tag_if_fulfilled())
-        detected_tags.add(RouteTrafficBehind(route).get_tag_if_fulfilled())
-        detected_tags.add(RouteOncomingTraffic(route).get_tag_if_fulfilled())
+        detected_tags.add(RouteObstacleStatic(route, scenario).get_tag_if_fulfilled())
+        detected_tags.add(RouteObstacleOtherDynamic(route, scenario).get_tag_if_fulfilled())
+        detected_tags.add(RouteTrafficAhead(route, scenario).get_tag_if_fulfilled())
+        detected_tags.add(RouteTrafficBehind(route, scenario).get_tag_if_fulfilled())
+        detected_tags.add(RouteOncomingTraffic(route, scenario).get_tag_if_fulfilled())
 
         # Traffic sign tags
-        detected_tags.add(RouteTrafficSignSpeedLimit(route).get_tag_if_fulfilled())
-        detected_tags.add(RouteTrafficSignRightOfWay(route).get_tag_if_fulfilled())
-        detected_tags.add(RouteTrafficSignNoRightOfWay(route).get_tag_if_fulfilled())
-        detected_tags.add(RouteTrafficSignStopLine(route).get_tag_if_fulfilled())
-        detected_tags.add(RouteTrafficSignTrafficLight(route).get_tag_if_fulfilled())
+        detected_tags.add(RouteTrafficSignSpeedLimit(route, scenario).get_tag_if_fulfilled())
+        detected_tags.add(RouteTrafficSignRightOfWay(route, scenario).get_tag_if_fulfilled())
+        detected_tags.add(RouteTrafficSignNoRightOfWay(route, scenario).get_tag_if_fulfilled())
+        detected_tags.add(RouteTrafficSignStopLine(route, scenario).get_tag_if_fulfilled())
+        detected_tags.add(RouteTrafficSignTrafficLight(route, scenario).get_tag_if_fulfilled())
 
         # Ego vehicle goal tags
-        detected_tags.add(EgoVehicleGoalIntersectionTurnLeft(route).get_tag_if_fulfilled())
-        detected_tags.add(EgoVehicleGoalIntersectionTurnRight(route).get_tag_if_fulfilled())
-        detected_tags.add(EgoVehicleGoalIntersectionProceedStraight(route).get_tag_if_fulfilled())
+        detected_tags.add(EgoVehicleGoalIntersectionTurnLeft(route, scenario).get_tag_if_fulfilled())
+        detected_tags.add(EgoVehicleGoalIntersectionTurnRight(route, scenario).get_tag_if_fulfilled())
+        detected_tags.add(EgoVehicleGoalIntersectionProceedStraight(route, scenario).get_tag_if_fulfilled())
 
     return set(filter(lambda tag: tag is not None, detected_tags))
