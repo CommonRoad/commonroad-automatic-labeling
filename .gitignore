@@ -44,9 +44,10 @@ coverage.xml
 *,cover
 .hypothesis/
 .pytest_cache
+test_output
 
-# Sphinx documentation
-docs/_build/
+# Markdown docs
+site
 
 # PyBuilder
 target/
@@ -56,3 +57,4 @@ target/
 
 # idea folder, uncomment if you don't need it
 .idea
+/scripts/output/
