@@ -29,14 +29,14 @@ test_python_versions:
     matrix:
       - PYTHON_VERSIONS: [ "3.11" ]
   script:
-    - coverage run -m pytest
+    - coverage run -m pytest tests/
   allow_failure: true
 
 test_with_coverage:
   stage: test
   image: python:3.10
   script:
-    - coverage run -m pytest
+    - coverage run -m pytest tests/
     - coverage report -m || true
     - coverage xml
   coverage: '/(?i)total.*? (100(?:\.0+)?\%|[1-9]?\d(?:\.\d+)?\%)$/'
