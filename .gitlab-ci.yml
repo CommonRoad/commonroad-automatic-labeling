@@ -5,6 +5,9 @@ stages:
   - test
   - deploy
 
+variables:
+  GIT_SUBMODULE_STRATEGY: recursive
+
 before_script:
   - apt-get update
   - apt-get install -y libgl1-mesa-glx
@@ -70,7 +73,6 @@ build_and_push_to_pypi_test:
   when: manual
   only:
     - main
-    - jnw/chore-fix-rp-dep
   script:
     - poetry config repositories.test https://test.pypi.org/legacy/
     - poetry build
