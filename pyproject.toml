@@ -8,6 +8,9 @@ license = "BSD-3-Clause"
 requires-python = ">=3.10"
 dynamic = ["dependencies"]
 
+[project.urls]
+Documentation = "https://cps.pages.gitlab.lrz.de/commonroad/automatic-scenario-labeling"
+
 [tool.poetry]
 packages = [
   {include = "commonroad_labeling"},
@@ -22,7 +25,7 @@ python = ">=3.10,<3.12" # python constraint is given by commonroad-reactive-plan
 commonroad-io = ">=2024.3"
 commonroad-route-planner = ">=2025.1.0"
 commonroad-crime = ">=0.4.4"
-# Reactive planner contains a bug because of which the metrics cannot be computed.
+# Reactive planner contains a bug, which breaks the metrics extraction.
 # The fix is not yet merged upstream, therefore the package is vendored directly.
 # commonroad-reactive-planner = ">=2025.1"
 matplotlib = ">=3.5.2, < 3.9"

@@ -13,6 +13,7 @@ plugins:
 nav:
   - Introduction: index.md
   - Example Usage: example.md
+  - Development: development.md
   - API Reference:
       - "Common": common.md
       - "Road Configuraion":
