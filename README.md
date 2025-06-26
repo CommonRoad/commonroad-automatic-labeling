@@ -1,12 +1,33 @@
-# Automatic Scenario Labeling
-[![pipeline status](https://gitlab.lrz.de/cps/commonroad/automatic-scenario-labeling/badges/develop/pipeline.svg)](https://gitlab.lrz.de/cps/commonroad/automatic-scenario-labeling/-/commits/develop)
-[![coverage report](https://gitlab.lrz.de/cps/commonroad/automatic-scenario-labeling/badges/develop/coverage.svg)](https://gitlab.lrz.de/cps/commonroad/automatic-scenario-labeling/-/commits/develop)
+# CommonRoad Automatic Scenario Labeling
 
-## Intended Functionality
-This tool aims to automatically assign the correct labels to CommonRoad scenarios.
+[![PyPI pyversions](https://img.shields.io/pypi/pyversions/commonroad-labeling.svg)](https://pypi.python.org/pypi/commonroad-labeling/)
+[![PyPI version fury.io](https://badge.fury.io/py/commonroad-labeling.svg)](https://pypi.python.org/pypi/commonroad-labeling/)
+[![PyPI download week](https://img.shields.io/pypi/dw/commonroad-labeling.svg?label=PyPI%20downloads)](https://pypi.python.org/pypi/commonroad-labeling/)
+[![PyPI download month](https://img.shields.io/pypi/dm/commonroad-labeling.svg?label=PyPI%20downloads)](https://pypi.python.org/pypi/commonroad-labeling/)
+[![PyPI license](https://img.shields.io/pypi/l/commonroad-labeling.svg)](https://pypi.python.org/pypi/commonroad-labeling/)
 
-The full list of available labels in CommonRoad is:
-Comfort, Critical, Emergency Breaking, Evasive, Highway, Illegal Cut In, Intersection, Interstate, Lane Change, Lane Following, Merging Lanes, Multi Lane, No Oncoming Traffic, Oncoming Traffic, Parallel Lanes, Race Track, Roundabout, Rural, Simulated, Single Lane, Slip Road, Speed Limit, Traffic Jam, Turn Left, Turn Right, Two Lane, Urban
+Automatically assign correct labels to CommonRoad scenarios and check whether existing tags are correct.
+
+The full documentation of the API and introductory examples can be found at [cps.pages.gitlab.lrz.de/commonroad/automatic-scenario-labeling](https://cps.pages.gitlab.lrz.de/commonroad/automatic-scenario-labeling).
+
+## Quick Start
+
+### Installation
+
+```sh
+$ pip install commonroad-labeling
+```
+
+### Usage Example
+
+```python
+from pathlib import Path
+
+from commonroad_labeling.common.general import get_detected_tags_by_file
+
+# specify a directory and detect tags
+tags_by_file = get_detected_tags_by_file(Path.cwd().joinpath("path", "to", "directory"))
+```
 
 ## Sketched Functionality
 1. Load scenario using commonroad-io.
@@ -17,10 +38,3 @@ Comfort, Critical, Emergency Breaking, Evasive, Highway, Illegal Cut In, Interse
    3. Using criticality metrics.
 4. Check whether the tags are consistent with the previously assigned tags. → Warning if necessary
 5. Overwrite scenario with corrected tags.
-
-## Fulfill Conventions
-- Well documented code.
-- Use Poetry.
-- Use CI/CD.
-- Stick to coding conventions (use linting).
-- Providing a version-stable Docker file.

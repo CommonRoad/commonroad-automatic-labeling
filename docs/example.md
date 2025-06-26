@@ -1,6 +1,6 @@
 The subsequent code snippet shows a minimal example on how to use CommonRoad Automatic Labeling tag detection.
 
-```Python
+```python
 from pathlib import Path
 
 from commonroad_labeling.common.general import get_detected_tags_by_file
