@@ -1,3 +1,0 @@
-[submodule "external/commonroad-reactive-planner"]
-	path = external/commonroad-reactive-planner
-	url = https://github.com/jrester/commonroad-reactive-planner.git
