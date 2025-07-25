@@ -15,9 +15,6 @@ Documentation = "https://cps.pages.gitlab.lrz.de/commonroad/automatic-scenario-l
 packages = [
   {include = "commonroad_labeling"},
   {include = "scripts"},
-  # The currently distributed version of commonroad-reactive-planner contains a bug, which breaks the metrics extraction.
-  # As PyPI does not allow git dependencies, the package must be vendored directly.
-  {from = "external/commonroad-reactive-planner", include = "commonroad_rp"}
 ]
 
 [tool.poetry.dependencies]
@@ -27,22 +24,10 @@ commonroad-route-planner = ">=2025.1.0"
 commonroad-crime = ">=0.4.4"
 # Reactive planner contains a bug, which breaks the metrics extraction.
 # The fix is not yet merged upstream, therefore the package is vendored directly.
-# commonroad-reactive-planner = ">=2025.1"
+commonroad-reactive-planner = { git = "git@gitlab.lrz.de:cps/reactive-planner.git", rev = "6872a915480d89a7353fd8630c4d729b05f40c00" }
 matplotlib = ">=3.5.2, < 3.9"
 pandas = "^2.2.2"
 scikit-learn = "^1.4"
-
-# Dependencies of commonroad-reactive-planner.
-networkx = ">=2.2"
-numpy = ">=1.22"
-methodtools = "^0.4.5"
-omegaconf = ">=2.1.1"
-scipy = ">=1.5.2"
-imageio = ">=2.13.5"
-triangle = ">=20230923"
-commonroad-drivability-checker = "^2025.1"
-commonroad-clcs = "^2025.1.1"
-commonroad_vehicle_models = ">=3.0.2"
 
 [tool.poetry.group.dev]
 optional = true
