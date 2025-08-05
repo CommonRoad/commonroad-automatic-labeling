@@ -17,7 +17,7 @@ class EgoVehicleGoalIntersectionTest(unittest.TestCase):
         for scenario, routes in self.scenarios_and_routes:
             is_fulfilled = None
             for route in routes:
-                is_fulfilled = EgoVehicleGoalIntersectionTurnLeft(route).is_fulfilled()
+                is_fulfilled = EgoVehicleGoalIntersectionTurnLeft(route, scenario).is_fulfilled()
                 if is_fulfilled:
                     break
 
@@ -30,7 +30,7 @@ class EgoVehicleGoalIntersectionTest(unittest.TestCase):
         for scenario, routes in self.scenarios_and_routes:
             is_fulfilled = None
             for route in routes:
-                is_fulfilled = EgoVehicleGoalIntersectionTurnRight(route).is_fulfilled()
+                is_fulfilled = EgoVehicleGoalIntersectionTurnRight(route, scenario).is_fulfilled()
                 if is_fulfilled:
                     break
 
@@ -45,7 +45,7 @@ class EgoVehicleGoalIntersectionTest(unittest.TestCase):
         for scenario, routes in self.scenarios_and_routes:
             is_fulfilled = None
             for route in routes:
-                is_fulfilled = EgoVehicleGoalIntersectionProceedStraight(route).is_fulfilled()
+                is_fulfilled = EgoVehicleGoalIntersectionProceedStraight(route, scenario).is_fulfilled()
                 if is_fulfilled:
                     break
 

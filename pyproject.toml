@@ -22,9 +22,7 @@ python = ">=3.10,<3.12" # python constraint is given by commonroad-reactive-plan
 commonroad-io = ">=2024.3"
 commonroad-route-planner = ">=2025.1.0"
 commonroad-crime = ">=0.4.4"
-# Reactive planner contains a bug, which breaks the metrics extraction.
-# The fix is not yet merged upstream, therefore the package is vendored directly.
-commonroad-reactive-planner = { git = "git@gitlab.lrz.de:cps/reactive-planner.git", rev = "6872a915480d89a7353fd8630c4d729b05f40c00" }
+commonroad-reactive-planner = "^2025.1" # { git = "git@gitlab.lrz.de:cps/reactive-planner.git", branch = "development" }
 matplotlib = ">=3.5.2, < 3.9"
 pandas = "^2.2.2"
 scikit-learn = "^1.4"

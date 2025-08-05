@@ -22,7 +22,7 @@ class RouteLaneletLayoutTest(unittest.TestCase):
         for scenario, routes in self.scenarios_and_routes:
             is_fulfilled = None
             for route in routes:
-                is_fulfilled = RouteLaneletLayoutSingleLane(route).is_fulfilled()
+                is_fulfilled = RouteLaneletLayoutSingleLane(route, scenario).is_fulfilled()
                 if is_fulfilled:
                     break
 
@@ -35,7 +35,7 @@ class RouteLaneletLayoutTest(unittest.TestCase):
         for scenario, routes in self.scenarios_and_routes:
             is_fulfilled = None
             for route in routes:
-                is_fulfilled = RouteLaneletLayoutMultiLane(route).is_fulfilled()
+                is_fulfilled = RouteLaneletLayoutMultiLane(route, scenario).is_fulfilled()
                 if is_fulfilled:
                     break
 
@@ -48,7 +48,7 @@ class RouteLaneletLayoutTest(unittest.TestCase):
         for scenario, routes in self.scenarios_and_routes:
             is_fulfilled = None
             for route in routes:
-                is_fulfilled = RouteLaneletLayoutBidirectional(route).is_fulfilled()
+                is_fulfilled = RouteLaneletLayoutBidirectional(route, scenario).is_fulfilled()
                 if is_fulfilled:
                     break
 
@@ -61,7 +61,7 @@ class RouteLaneletLayoutTest(unittest.TestCase):
         for scenario, routes in self.scenarios_and_routes:
             is_fulfilled = None
             for route in routes:
-                is_fulfilled = RouteLaneletLayoutOneWay(route).is_fulfilled()
+                is_fulfilled = RouteLaneletLayoutOneWay(route, scenario).is_fulfilled()
                 if is_fulfilled:
                     break
 
@@ -74,7 +74,7 @@ class RouteLaneletLayoutTest(unittest.TestCase):
         for scenario, routes in self.scenarios_and_routes:
             is_fulfilled = None
             for route in routes:
-                is_fulfilled = RouteLaneletLayoutIntersection(route).is_fulfilled()
+                is_fulfilled = RouteLaneletLayoutIntersection(route, scenario).is_fulfilled()
                 if is_fulfilled:
                     break
 
@@ -87,7 +87,7 @@ class RouteLaneletLayoutTest(unittest.TestCase):
         for scenario, routes in self.scenarios_and_routes:
             is_fulfilled = None
             for route in routes:
-                is_fulfilled = RouteLaneletLayoutDivergingLane(route).is_fulfilled()
+                is_fulfilled = RouteLaneletLayoutDivergingLane(route, scenario).is_fulfilled()
                 if is_fulfilled:
                     break
 
@@ -100,7 +100,7 @@ class RouteLaneletLayoutTest(unittest.TestCase):
         for scenario, routes in self.scenarios_and_routes:
             is_fulfilled = None
             for route in routes:
-                is_fulfilled = RouteLaneletLayoutMergingLane(route).is_fulfilled()
+                is_fulfilled = RouteLaneletLayoutMergingLane(route, scenario).is_fulfilled()
                 if is_fulfilled:
                     break
 
@@ -113,7 +113,7 @@ class RouteLaneletLayoutTest(unittest.TestCase):
         for scenario, routes in self.scenarios_and_routes:
             is_fulfilled = None
             for route in routes:
-                is_fulfilled = RouteLaneletLayoutRoundabout(route).is_fulfilled()
+                is_fulfilled = RouteLaneletLayoutRoundabout(route, scenario).is_fulfilled()
                 if is_fulfilled:
                     break
 

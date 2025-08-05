@@ -19,7 +19,7 @@ class RouteObstacleTest(unittest.TestCase):
         for scenario, routes in self.scenarios_and_routes:
             detected_tags = set()
             for route in routes:
-                detected_tags.add(RouteOncomingTraffic(route).get_tag_if_fulfilled())
+                detected_tags.add(RouteOncomingTraffic(route, scenario).get_tag_if_fulfilled())
 
             if TagEnum.ROUTE_OBSTACLE_ONCOMING_TRAFFIC in expected_scenario_tags.get(str(scenario.scenario_id)):
                 self.assertIn(
@@ -53,7 +53,7 @@ class RouteObstacleTest(unittest.TestCase):
         for scenario, routes in self.scenarios_and_routes:
             is_fulfilled = None
             for route in routes:
-                is_fulfilled = RouteTrafficAhead(route).is_fulfilled()
+                is_fulfilled = RouteTrafficAhead(route, scenario).is_fulfilled()
                 if is_fulfilled:
                     break
 
@@ -66,7 +66,7 @@ class RouteObstacleTest(unittest.TestCase):
         for scenario, routes in self.scenarios_and_routes:
             is_fulfilled = None
             for route in routes:
-                is_fulfilled = RouteTrafficBehind(route).is_fulfilled()
+                is_fulfilled = RouteTrafficBehind(route, scenario).is_fulfilled()
                 if is_fulfilled:
                     break
 
@@ -79,7 +79,7 @@ class RouteObstacleTest(unittest.TestCase):
         for scenario, routes in self.scenarios_and_routes:
             is_fulfilled = None
             for route in routes:
-                is_fulfilled = RouteObstacleOtherDynamic(route).is_fulfilled()
+                is_fulfilled = RouteObstacleOtherDynamic(route, scenario).is_fulfilled()
                 if is_fulfilled:
                     break
 
@@ -92,7 +92,7 @@ class RouteObstacleTest(unittest.TestCase):
         for scenario, routes in self.scenarios_and_routes:
             is_fulfilled = None
             for route in routes:
-                is_fulfilled = RouteObstacleStatic(route).is_fulfilled()
+                is_fulfilled = RouteObstacleStatic(route, scenario).is_fulfilled()
                 if is_fulfilled:
                     break
 
