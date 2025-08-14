@@ -10,7 +10,7 @@ variables:
 
 before_script:
   - apt-get update
-  - apt-get install -y libgl1-mesa-glx
+  - apt-get install -y libgl1
   - pip install poetry
   - poetry config virtualenvs.in-project true
   - git config --global url."https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.lrz.de".insteadOf "ssh://git@gitlab.lrz.de"
