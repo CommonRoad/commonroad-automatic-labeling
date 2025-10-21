@@ -19,7 +19,7 @@ class RouteTrafficSignTest(unittest.TestCase):
         for scenario, routes in self.scenarios_and_routes:
             is_fulfilled = None
             for route in routes:
-                is_fulfilled = RouteTrafficSignSpeedLimit(route).is_fulfilled()
+                is_fulfilled = RouteTrafficSignSpeedLimit(route, scenario).is_fulfilled()
                 if is_fulfilled:
                     break
 
@@ -32,7 +32,7 @@ class RouteTrafficSignTest(unittest.TestCase):
         for scenario, routes in self.scenarios_and_routes:
             is_fulfilled = None
             for route in routes:
-                is_fulfilled = RouteTrafficSignRightOfWay(route).is_fulfilled()
+                is_fulfilled = RouteTrafficSignRightOfWay(route, scenario).is_fulfilled()
                 if is_fulfilled:
                     break
 
@@ -45,7 +45,7 @@ class RouteTrafficSignTest(unittest.TestCase):
         for scenario, routes in self.scenarios_and_routes:
             is_fulfilled = None
             for route in routes:
-                is_fulfilled = RouteTrafficSignNoRightOfWay(route).is_fulfilled()
+                is_fulfilled = RouteTrafficSignNoRightOfWay(route, scenario).is_fulfilled()
                 if is_fulfilled:
                     break
 
@@ -58,7 +58,7 @@ class RouteTrafficSignTest(unittest.TestCase):
         for scenario, routes in self.scenarios_and_routes:
             is_fulfilled = None
             for route in routes:
-                is_fulfilled = RouteTrafficSignStopLine(route).is_fulfilled()
+                is_fulfilled = RouteTrafficSignStopLine(route, scenario).is_fulfilled()
                 if is_fulfilled:
                     break
 
@@ -71,7 +71,7 @@ class RouteTrafficSignTest(unittest.TestCase):
         for scenario, routes in self.scenarios_and_routes:
             is_fulfilled = None
             for route in routes:
-                is_fulfilled = RouteTrafficSignTrafficLight(route).is_fulfilled()
+                is_fulfilled = RouteTrafficSignTrafficLight(route, scenario).is_fulfilled()
                 if is_fulfilled:
                     break
 
