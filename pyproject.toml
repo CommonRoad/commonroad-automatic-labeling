@@ -1,6 +1,6 @@
 [project]
 name = "commonroad-labeling"
-version = "2025.1.1"
+version = "2025.1.2"
 description = "Automatic labeling of CommonRoad scenarios."
 authors = [{name = "Florian Finkeldei", email = "florian.finkeldei@tum.de"}, {name = "Dzan Tabakovic", email ="dzan.tabakovic@tum.de"}]
 readme = "README.md"
