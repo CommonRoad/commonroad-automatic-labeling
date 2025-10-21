@@ -23,7 +23,6 @@ commonroad-io = ">=2024.3"
 commonroad-route-planner = ">=2025.1.0"
 commonroad-crime = ">=0.4.4"
 commonroad-reactive-planner = "^2025.1"
-matplotlib = ">=3.5.2, < 3.9"
 pandas = "^2.2.2"
 scikit-learn = "^1.4"
 
